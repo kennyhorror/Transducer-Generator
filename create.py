@@ -8,10 +8,10 @@ N_rules = ['+N+Sg:0', '+N+Pl:^s']
 V_rules = ['+V:0']
 A_rules = ['+A:0']
 
-output = codecs.open('spanish.lexc', encoding='utf-8', mode='w+')
+output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
 
 def print_header():
-  output.write("""!!!spanish.lexc!!!
+  output.write("""!!!italian.lexc!!!
 
 Multichar_Symbols +N +V +A +Sg +Pl
 
@@ -28,15 +28,18 @@ def parse_words(iterable):
   V = set()
   A = set()
   for line in iterable:
-    (word, lemma, part) = line.split()
-    if part == 'A':
-      A.add(lemma)
-    elif part == 'V':
-      V.add(lemma)
-    elif part == 'N':
-      N.add(lemma)
-    else:
-      raise "Error"
+    columns = line.split()
+    wordform, lemmas = columns[0], columns[1:]
+    for lemma_with_tag in lemmas:
+      lemma, tag = lemma_with_tag.split('+')
+      if tag == 'A':
+        A.add(lemma)
+      elif tag == 'V':
+        V.add(lemma)
+      elif tag == 'N':
+        N.add(lemma)
+      else:
+        raise "Error"
   return (N, V, A)
 
 
@@ -54,8 +57,8 @@ def print_rules(name, rules):
   output.write("\n")
 
 if __name__ == '__main__':
+  (N, V, A) = parse_words(open('italian.txt.learn', 'r'))
   print_header()
-  (N, V, A) = parse_words(sys.stdin)
   print_words('Noun', N, 'Ninf')
   print_words('Verb', V, 'Vinf')
   print_words('Adv', A, 'Ainf')

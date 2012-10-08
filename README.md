@@ -1,4 +1,4 @@
-Spanish-Transducer
+Transducer-Generator
 ==================
 
-Spanish Transducer
+Generates .lexc file for foma.
