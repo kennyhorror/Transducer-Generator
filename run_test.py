@@ -4,12 +4,11 @@ import codecs
 import subprocess
 
 if __name__ == '__main__':
-  stdin = u'source italian.foma\nup\n'
   words = []
   for line in open('italian.txt.learn', 'r'):
     columns = line.split()
     words.append(columns[0].decode("ISO-8859-2") + u'\n')
-  stdin = u''.join(words)
+  stdin = u'source italian.foma\nup\n'.join(words)
 
   process = subprocess.Popen("./foma", stdin = subprocess.PIPE,
       stdout = subprocess.PIPE, stderr = subprocess.PIPE)
@@ -18,7 +17,7 @@ if __name__ == '__main__':
   itr = 0
   for line in stdout.decode('utf-8').split('\n')[:-3]:
     itr += 1
-    if itr < 26:
+    if itr < 27:
       continue
     output.write(line.split('> ')[-1])
     output.write('\n')
