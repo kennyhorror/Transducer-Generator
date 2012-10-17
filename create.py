@@ -4,18 +4,19 @@ import sys
 import os
 import codecs
 
-N_rules = ['+N+Sg:0', '+N+Pl:^s']
+N_rules = ['+N+Sg:0', '+N+Pl:^i', '+N+Pl:^e']
+
 V_rules = ['+V:0',
     '+V+Pr+Sg+1:^o',    '+V+Pr+Sg+2:^i',   '+V+Pr+Sg+3:^e',
     '+V+Pr+Pl+1:^iamo', '+V+Pr+Pl+2:^te', '+V+Pr+Pl+3:^ono']
-A_rules = ['+A:0']
+A_rules = ['+A+Qual+Sg:0', '+A+Qual+Pl:^i', '+A+Qual+Pl:^e']
 
 output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
 
 def print_header():
   output.write("""!!!italian.lexc!!!
 
-Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Pr +Pa
+Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Pr +Pa +Qual
 
 LEXICON Root
 
@@ -29,6 +30,8 @@ def print_foma():
   output = codecs.open('italian.foma', encoding='utf-8', mode='w+')
   output.write("""### italian.foma ###
 
+define V [a | o | u | e | i] ;
+
 # Rules for writing verbs
 define VerbPrSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m o ];
 define VerbPrSg3First [ r e "^" e ] -> "^" || [ a ] _;
@@ -36,6 +39,25 @@ define VerbPrSg3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ e ];
 define VerbPrPl2 [ r e ] -> 0 || [a | e | i ] _ "^" [ t e ];
 define VerbPrPl3First [ a r e ] -> a || _ "^" [ n o ];
 define VerbPrPl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
+
+# Rules for writing nouns
+define NounMPl [o | e] -> 0 || _ "^" i ;
+define NounFPl [a] -> 0 || _ "^" e ;
+define NounProfPl a -> 0 || i s t _ "^" [e | i] ;
+define NounGreekPl a -> 0 || [m | t] _ "^" i ;
+define NounIOPl [i o] -> 0 || _ "^" i ;
+define NounCiaPl [i a] -> 0 || [c | g] _ "^" e ;
+define NounExceptions [{uomo} "+N" "+Sg" .x. {uomini} "+N" "+Pl"] |
+                      [{zio} "+N" "+Sg" .x. {zii} "+N" "+Pl"]; 
+
+# Rules for writing adjectives
+define AdjMPl [o | e] -> 0 || _ "^" i ;
+define AdjFPl [a] -> 0 || _ "^" e ;
+define AdjCGoPl [o] -> h || [c | g] _ "^" i ;
+define AdjCGaPl [a] -> h || [c | g] _ "^" e ;
+define AdjCiOPl [i o] -> 0 || [c | g] _ "^" i ;
+define AdjCiAPl [[i a] -> i || V [c | g] _ "^" e] |
+                [[i a] -> 0 || [c | g] _ "^" e];
 
 #Cleanup: remove morpheme boundaries
 define Cleanup "^" -> 0;
