@@ -10,8 +10,8 @@ N_rules = (
 
 V_rules = (
     '+V:0',
-    '+V+Presente+Sg+1:^o',    '+V+Pr+Sg+2:^i',   '+V+Pr+Sg+3:^e',
-    '+V+Presente+Pl+1:^iamo', '+V+Pr+Pl+2:^te', '+V+Pr+Pl+3:^ono',
+    '+V+Presente+Sg+1:^o',    '+V+Presente+Sg+2:^i',   '+V+Presente+Sg+3:^e',
+    '+V+Presente+Pl+1:^iamo', '+V+Presente+Pl+2:^te', '+V+Presente+Pl+3:^ono',
 )
 
 A_rules = (
@@ -50,7 +50,7 @@ define VerbPresentePl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
 # Rules for writing nouns
 define NounMPl [o | e] -> 0 || _ "^" i ;
 define NounFPl [a] -> 0 || _ "^" e ;
-define NounPresenteofPl a -> 0 || i s t _ "^" [e | i] ;
+define NounProfPl a -> 0 || i s t _ "^" [e | i] ;
 define NounGreekPl a -> 0 || [m | t] _ "^" i ;
 define NounIOPl [i o] -> 0 || _ "^" i ;
 define NounCiaPl [i a] -> 0 || [c | g] _ "^" e ;
