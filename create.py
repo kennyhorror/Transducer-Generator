@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import sys
 import os
@@ -12,6 +13,10 @@ V_rules = (
     '+V:0',
     '+V+Presente+Sg+1:^o',    '+V+Presente+Sg+2:^i',   '+V+Presente+Sg+3:^e',
     '+V+Presente+Pl+1:^iamo', '+V+Presente+Pl+2:^te', '+V+Presente+Pl+3:^ono',
+
+    u'+V+FuturoSemplice+Sg+1:^ò', '+V+FuturoSemplice+Sg+2:^ai',
+    u'+V+FuturoSemplice+Sg+3:^à', '+V+FuturoSemplice+Pl+1:^emo',
+    '+V+FuturoSemplice+Pl+2:^ete','+V+FuturoSemplice+Pl+3:^anno',
 )
 
 A_rules = (
@@ -21,9 +26,9 @@ A_rules = (
 output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
 
 def print_header():
-  output.write("""!!!italian.lexc!!!
+  output.write(u"""!!!italian.lexc!!!
 
-Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +Pa +Qual
+Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +FuturoSemplice +Pa +Qual
 
 LEXICON Root
 
@@ -35,7 +40,7 @@ Adv  ;
 
 def print_foma():
   output = codecs.open('italian.foma', encoding='utf-8', mode='w+')
-  output.write("""### italian.foma ###
+  output.write(u"""### italian.foma ###
 
 define V [a | o | u | e | i] ;
 
@@ -46,6 +51,9 @@ define VerbPresenteSg3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ e ];
 define VerbPresentePl2 [ r e ] -> 0 || [a | e | i ] _ "^" [ t e ];
 define VerbPresentePl3First [ a r e ] -> a || _ "^" [ n o ];
 define VerbPresentePl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
+
+define VerbFuturoSempliceFirst [ a r e ] -> "er" ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
+define VerbFuturoSempliceSecondThird e -> 0 || [ i r | a r]  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
 
 # Rules for writing nouns
 define NounMPl [o | e] -> 0 || _ "^" i ;
@@ -72,13 +80,15 @@ define Cleanup "^" -> 0;
 read lexc italian.lexc
 define Lexicon
 
-define Grammar Lexicon              .o. 
-               VerbPresenteSg12Pl1        .o.
-               VerbPresenteSg3First       .o.
-               VerbPresenteSg3SecondThird .o.
-               VerbPresentePl2            .o.
-               VerbPresentePl3First       .o.
-               VerbPresentePl3SecondThird .o.
+define Grammar Lexicon                        .o. 
+               VerbPresenteSg12Pl1            .o.
+               VerbPresenteSg3SecondThird     .o.
+               VerbPresentePl2                .o.
+               VerbPresentePl3First           .o.
+               VerbPresentePl3SecondThird     .o.
+               VerbFuturoSempliceFirst        .o.
+               VerbFuturoSempliceSecondThird  .o.
+               VerbPresenteSg3First           .o. #This rule is really stupid. Need to be fixed
                Cleanup;
 
 regex Grammar;
@@ -108,7 +118,7 @@ def parse_words(iterable):
 def print_words(name, words, form):
   output.write("LEXICON " + name + "\n")
   for word in words:
-    output.write(word.decode("ISO-8859-2"))
+    output.write(word.decode("ISO-8859-1"))
     output.write("\t" + form + ";\n")
   output.write("\n")
 
