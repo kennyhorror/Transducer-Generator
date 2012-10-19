@@ -15,7 +15,9 @@ V_rules = (
 )
 
 A_rules = (
-    '+A+Qual+Sg:0', '+A+Qual+Pl:^i', '+A+Qual+Pl:^e',
+    '+A:0', '+A+Pl:^i', '+A+Pl:^e',
+    '+A+Part+Presente:^nte', '+A+Part+Presente:^nti',
+    '+A+Part+Passato:^ti', '+A+Part+Passato:^ta', '+A+Part+Passato:^te'
 )
 
 output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
@@ -23,7 +25,7 @@ output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
 def print_header():
   output.write("""!!!italian.lexc!!!
 
-Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +Pa +Qual
+Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +Passato +Part
 
 LEXICON Root
 
@@ -38,6 +40,7 @@ def print_foma():
   output.write("""### italian.foma ###
 
 define V [a | o | u | e | i] ;
+define C [b | c | d | f | g | h | j | k | l | m | n | p | q | r | s | t | v | w | x | y | z];
 
 # Rules for writing verbs
 define VerbPresenteSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m o ];
@@ -50,21 +53,24 @@ define VerbPresentePl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
 # Rules for writing nouns
 define NounMPl [o | e] -> 0 || _ "^" i ;
 define NounFPl [a] -> 0 || _ "^" e ;
-define NounProfPl a -> 0 || i s t _ "^" [e | i] ;
+define NounProfessionPl a -> 0 || i s t _ "^" [e | i] ;
 define NounGreekPl a -> 0 || [m | t] _ "^" i ;
-define NounIOPl [i o] -> 0 || _ "^" i ;
-define NounCiaPl [i a] -> 0 || [c | g] _ "^" e ;
+define NounIoEndingPl [i o] -> 0 || _ "^" i ;
+define NounCiaEndingPl [i a] -> 0 || [c | g] _ "^" e ;
 define NounExceptions [{uomo} "+N" "+Sg" .x. {uomini} "+N" "+Pl"] |
                       [{zio} "+N" "+Sg" .x. {zii} "+N" "+Pl"]; 
 
 # Rules for writing adjectives
 define AdjMPl [o | e] -> 0 || _ "^" i ;
 define AdjFPl [a] -> 0 || _ "^" e ;
-define AdjCGoPl [o] -> h || [c | g] _ "^" i ;
-define AdjCGaPl [a] -> h || [c | g] _ "^" e ;
-define AdjCiOPl [i o] -> 0 || [c | g] _ "^" i ;
-define AdjCiAPl [[i a] -> i || V [c | g] _ "^" e] |
-                [[i a] -> 0 || [c | g] _ "^" e];
+define AdjCGoEndingPl [o] -> h || [c | g] _ "^" i ;
+define AdjCGaEndingPl [a] -> h || [c | g] _ "^" e ;
+define AdjCioEndingPl [i o] -> 0 || [c | g] _ "^" i ;
+define AdjCiaEndingPl [[i a] -> i || V [c | g] _ "^" e] |
+                [[i a] -> 0 || C [c | g] _ "^" e];
+define AdjPresenteParticipio [i -> e || _ r e "^" n t [e | i]] .o.
+                            [[r e] -> 0 || _ "^" n t [e | i]] ;
+define AdjPassatoParticipio [t o] -> 0 || [a | u | i] _ "^" t [e | i | a] ;
 
 #Cleanup: remove morpheme boundaries
 define Cleanup "^" -> 0;
@@ -79,6 +85,10 @@ define Grammar Lexicon              .o.
                VerbPresentePl2            .o.
                VerbPresentePl3First       .o.
                VerbPresentePl3SecondThird .o.
+               NounMPl                    .o.
+               NounFPl                    .o.
+               AdjMPl	                  .o.
+               AdjFPl	                  .o.
                Cleanup;
 
 regex Grammar;
