@@ -52,7 +52,7 @@ define VerbPresenteSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m
 define VerbPresenteSg3First [ r e "^" e ] -> "^" || [ a ] _;
 define VerbPresenteSg3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ e ];
 define VerbPresentePl2 [ r e ] -> 0 || [a | e | i ] _ "^" [ t e ];
-define VerbPresentePl3First [ a r e ] -> a || _ "^" [ n o ];
+define VerbPresentePl3First [ r e "^" o ] -> "^" || [ a ] _ [ n o ];
 define VerbPresentePl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
 
 define VerbFuturoSempliceFirst [ a r e ] -> "er" ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
@@ -87,7 +87,6 @@ read lexc italian.lexc
 define Lexicon
 
 define Grammar Lexicon                        .o. 
-               VerbPresenteSg12Pl1            .o.
                VerbPresenteSg3SecondThird     .o.
                VerbPresentePl2                .o.
                VerbPresentePl3First           .o.
@@ -103,6 +102,7 @@ define Grammar Lexicon                        .o.
                NounFPl                        .o.
                AdjMPl	                      .o.
                AdjFPl	                      .o.
+               VerbPresenteSg12Pl1            .o.
                VerbPresenteSg3First           .o. #This rule is really stupid. Need to be fixed
                Cleanup;
 
