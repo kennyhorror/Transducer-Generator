@@ -62,6 +62,7 @@ define V [a | o | u | e | i] ;
 define C [b | c | d | f | g | h | j | k | l | m | n | p | q | r | s | t | v | w | x | y | z];
 
 # Rules for writing verbs
+define VerbSolidK [a r e] -> h || [c] _ "^" [i | e];
 define VerbPresenteSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m o ];
 define VerbPresenteSg3First [ r e "^" e ] -> "^" || [ a ] _;
 define VerbPresenteSg3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ e ];
@@ -87,6 +88,7 @@ define VerbCondizionalePassatoSecond [ e r e ] -> u ||  _ "^" [ t o ];
 define VerbCondizionalePassatoRest [ r e ] -> 0 || [ a | i ] _ "^" [ t o ];
 
 # Rules for writing nouns
+define NounFPlSolidK [a] -> h || _ "^" e;
 define NounMPl [o | e] -> 0 || _ "^" i ;
 define NounFPl [a] -> 0 || _ "^" e ;
 define NounProfessionPl a -> 0 || i s t _ "^" [e | i] ;
@@ -108,13 +110,15 @@ define AdjPresenteParticipio [i -> e || _ r e "^" n t [e | i]] .o.
                             [[r e] -> 0 || _ "^" n t [e | i]] ;
 define AdjPassatoParticipio [t o] -> 0 || [a | u | i] _ "^" t [e | i | a] ;
 
+
 #Cleanup: remove morpheme boundaries
 define Cleanup [ "^" | "$" | "\'" ] -> 0;
 
 read lexc italian.lexc
 define Lexicon
 
-define Grammar Lexicon                        .o. 
+define Grammar Lexicon                        .o.
+               VerbSolidK                         .o.
                VerbPresenteSg3SecondThird     .o.
                VerbPresentePl2                .o.
                VerbPresentePl3First           .o.
@@ -133,6 +137,7 @@ define Grammar Lexicon                        .o.
                VerbCondizionaleRest           .o.
                VerbCondizionalePassatoSecond  .o.
                VerbCondizionalePassatoRest    .o.
+               NounFPlSolidK                  .o.
                NounMPl                        .o.
                NounFPl                        .o.
                AdjMPl	                      .o.
