@@ -37,6 +37,7 @@ V_rules = (
     '+V+CongiuntivoImperfetto+Sg+2:^ssero',
     
     '+V+CondizionalePassato+Sg:^to', '+V+CondizionalePassato+Pl:^ti',
+    '+V+Gerundio:^ndo', '+V+ParticipioPresente:^nte',
 )
 
 A_rules = (
@@ -50,7 +51,7 @@ output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
 def print_header():
   output.write(u"""!!!italian.lexc!!!
 
-Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +FuturoSemplice +PassatoRemoto +Passato +Part +Imperfetto +Condizionale +CondizionalePassato CongiuntivoImperfetto
+Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +FuturoSemplice +PassatoRemoto +Passato +Part +Imperfetto +Condizionale +CondizionalePassato +CongiuntivoImperfetto +ParticipioPresente +Gerundio
 
 LEXICON Root
 
@@ -93,6 +94,8 @@ define VerbCondizionalePassatoSecond [ e r e ] -> u ||  _ "^" [ t o ];
 define VerbCondizionalePassatoRest [ r e ] -> 0 || [ a | i ] _ "^" [ t o | t i ];
 
 define VerbCongiuntivoImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ s s l | s s e | s s i m o | s t e | s s e r o ];
+define VerbGerundioAndPPFirstSecond [ r e ] -> 0 || [ a | e ] _ "^" [ n d o | n t e ];
+define VerbGerundioAndPPThird [ i r e ] -> e || _ "^" [ n d o | n t e ];
 
 # Rules for writing nouns
 define NounMPl [o | e] -> 0 || _ "^" i ;
@@ -142,6 +145,8 @@ define Grammar Lexicon                        .o.
                VerbCondizionalePassatoSecond  .o.
                VerbCondizionalePassatoRest    .o.
                VerbCongiuntivoImperfetto      .o.
+               VerbGerundioAndPPFirstSecond   .o.
+               VerbGerundioAndPPThird         .o.
                NounMPl                        .o.
                NounFPl                        .o.
                AdjMPl	                      .o.
