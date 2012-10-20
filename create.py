@@ -17,6 +17,15 @@ V_rules = (
     u'+V+FuturoSemplice+Sg+1:^ò', '+V+FuturoSemplice+Sg+2:^ai',
     u'+V+FuturoSemplice+Sg+3:^à', '+V+FuturoSemplice+Pl+1:^emo',
     '+V+FuturoSemplice+Pl+2:^ete','+V+FuturoSemplice+Pl+3:^anno',
+
+    '+V+PassatoRemoto+Sg+1:$i', '+V+PassatoRemoto+Sg+2:^sti',
+    '+V+PassatoRemoto+Sg+3:^\'', '+V+PassatoRemoto+Pl+1:^mmo',
+    '+V+PassatoRemoto+Pl+2:^ste', '+V+PassatoRemoto+Pl+3:^rono',
+
+    '+V+Imperfetto+Sg+1:^vo', '+V+Imperfetto+Sg+2:^vi',
+    '+V+Imperfetto+Sg+3:^va', '+V+Imperfetto+Pl+1:^vamo',
+    '+V+Imperfetto+Pl+2:^vate', '+V+Imperfetto+Pl+3:^vano',
+
 )
 
 A_rules = (
@@ -30,7 +39,7 @@ output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
 def print_header():
   output.write(u"""!!!italian.lexc!!!
 
-Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +FuturoSemplice +Passato +Part
+Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +FuturoSemplice +PassatoRemoto +Passato +Part +Imperfetto
 
 LEXICON Root
 
@@ -56,7 +65,16 @@ define VerbPresentePl3First [ r e "^" o ] -> "^" || [ a ] _ [ n o ];
 define VerbPresentePl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
 
 define VerbFuturoSempliceFirst [ a r e ] -> "er" ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
-define VerbFuturoSempliceSecondThird e -> 0 || [ i r | a r]  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
+define VerbFuturoSempliceSecondThird e -> 0 || [ i r | a r]  _ "^" [ ò | a i | à | e m o | e t e | a n n o];
+
+#Experimental
+define VerbPassatoRemoto1 [ r e ] -> 0 || [ a | e | i ] _ "$" [ i ];
+define VerbPassatoRemoto3First [ a r e ] "^" -> "ò" || _ "\'";
+define VerbPassatoRemoto3Second [ r e ] "^" -> 0 || _ "\'";
+define VerbPassatoRemoto3Third [ i r e ] "^" -> "ì" || _ "\'";
+define VerbPassatoRemotoRest [ r e ] -> 0 || [ a | e | i ] _ "^" [ s t i | m m o | r o n o];
+
+define VerbImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ v o | v i | v a ];
 
 # Rules for writing nouns
 define NounMPl [o | e] -> 0 || _ "^" i ;
@@ -81,7 +99,7 @@ define AdjPresenteParticipio [i -> e || _ r e "^" n t [e | i]] .o.
 define AdjPassatoParticipio [t o] -> 0 || [a | u | i] _ "^" t [e | i | a] ;
 
 #Cleanup: remove morpheme boundaries
-define Cleanup "^" -> 0;
+define Cleanup [ "^" | "$" | "\'" ] -> 0;
 
 read lexc italian.lexc
 define Lexicon
@@ -98,6 +116,12 @@ define Grammar Lexicon                        .o.
                VerbPresentePl2                .o.
                VerbPresentePl3First           .o.
                VerbPresentePl3SecondThird     .o.
+               VerbPassatoRemoto1             .o.
+               VerbPassatoRemoto3First        .o.
+               VerbPassatoRemoto3Second       .o.
+               VerbPassatoRemoto3Third        .o.
+               VerbPassatoRemotoRest          .o.
+               VerbImperfetto                 .o.
                NounMPl                        .o.
                NounFPl                        .o.
                AdjMPl	                      .o.
