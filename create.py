@@ -26,6 +26,11 @@ V_rules = (
     '+V+Imperfetto+Sg+3:^va', '+V+Imperfetto+Pl+1:^vamo',
     '+V+Imperfetto+Pl+2:^vate', '+V+Imperfetto+Pl+3:^vano',
 
+    '+V+Condizionale+Sg+1:^rei', '+V+Condizionale+Sg+2:^resti',
+    '+V+Condizionale+Sg+3:^rebbe', '+V+Condizionale+Pl+1:^remmo',
+    '+V+Condizionale+Pl+2:^reste', '+V+Condizionale+Pl+3:^rebbero',
+
+    '+V+CondizionalePassato:^to',
 )
 
 A_rules = (
@@ -39,7 +44,7 @@ output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
 def print_header():
   output.write(u"""!!!italian.lexc!!!
 
-Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +FuturoSemplice +PassatoRemoto +Passato +Part +Imperfetto
+Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +FuturoSemplice +PassatoRemoto +Passato +Part +Imperfetto +Condizionale +CondizionalePassato
 
 LEXICON Root
 
@@ -64,8 +69,8 @@ define VerbPresentePl2 [ r e ] -> 0 || [a | e | i ] _ "^" [ t e ];
 define VerbPresentePl3First [ r e "^" o ] -> "^" || [ a ] _ [ n o ];
 define VerbPresentePl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
 
-define VerbFuturoSempliceFirst [ a r e ] -> "er" ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
-define VerbFuturoSempliceSecondThird e -> 0 || [ i r | a r]  _ "^" [ ò | a i | à | e m o | e t e | a n n o];
+define VerbFuturoSempliceFirst [ a r e ] -> [ e r ] ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
+define VerbFuturoSempliceSecondThird e -> 0 || [ i r | e r ]  _ "^" [ ò | a i | à | e m o | e t e | a n n o];
 
 #Experimental
 define VerbPassatoRemoto1 [ r e ] -> 0 || [ a | e | i ] _ "$" [ i ];
@@ -75,6 +80,11 @@ define VerbPassatoRemoto3Third [ i r e ] "^" -> "ì" || _ "\'";
 define VerbPassatoRemotoRest [ r e ] -> 0 || [ a | e | i ] _ "^" [ s t i | m m o | r o n o];
 
 define VerbImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ v o | v i | v a ];
+define VerbCondizionaleFirst [ a r e ] -> e || _ "^" [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o ];
+define VerbCondizionaleRest [ r e ] -> 0 || [ e | i ] _ "^" [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o ];
+
+define VerbCondizionalePassatoSecond [ e r e ] -> u ||  _ "^" [ t o ];
+define VerbCondizionalePassatoRest [ r e ] -> 0 || [ a | i ] _ "^" [ t o ];
 
 # Rules for writing nouns
 define NounMPl [o | e] -> 0 || _ "^" i ;
@@ -113,15 +123,16 @@ define Grammar Lexicon                        .o.
                VerbFuturoSempliceSecondThird  .o.
                VerbPresenteSg3First           .o.
                VerbPresenteSg3SecondThird     .o.
-               VerbPresentePl2                .o.
-               VerbPresentePl3First           .o.
-               VerbPresentePl3SecondThird     .o.
                VerbPassatoRemoto1             .o.
                VerbPassatoRemoto3First        .o.
                VerbPassatoRemoto3Second       .o.
                VerbPassatoRemoto3Third        .o.
                VerbPassatoRemotoRest          .o.
                VerbImperfetto                 .o.
+               VerbCondizionaleFirst          .o.
+               VerbCondizionaleRest           .o.
+               VerbCondizionalePassatoSecond  .o.
+               VerbCondizionalePassatoRest    .o.
                NounMPl                        .o.
                NounFPl                        .o.
                AdjMPl	                      .o.
