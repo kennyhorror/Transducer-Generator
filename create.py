@@ -9,7 +9,7 @@ import subprocess
 from config import FOMA_PATH
 
 N_rules = (
-    '+N+Sg:0', '+N+Pl:^i', '+N+Pl:^e',
+    '+N+Sg:0', '+N+Pl:*i', '+N+Pl:*e',
 )
 
 V_rules = (
@@ -47,8 +47,8 @@ V_rules = (
 )
 
 A_rules = (
-    '+A+M+Sg:0', '+A+F+Sg:^a', '+A+M+Pl:^i', '+A+F+Pl:^e',
-    '+A+Participio+Presente:^nte', '+A+Participio+Presente:^nti'
+    '+A+M+Sg:0', '+A+F+Sg:&a', '+A+M+Pl:&i', '+A+F+Pl:&e',
+    '+A+Participio+Presente:&nte', '+A+Participio+Presente:&nti'
 )
 
 output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
@@ -66,7 +66,7 @@ Adv  ;
 
 """)
 
-def print_foma():
+def print_foma(any_rules, lexicon = "Lexicon"):
   output = codecs.open('italian.foma', encoding='utf-8', mode='w+')
   output.write(u"""### italian.foma ###
 
@@ -110,41 +110,48 @@ define VerbCongiuntivoPresentePl3First [ a r e ] "^" [ a ] -> "^" [ i ] || _ [ n
 define VerbCongiuntivoPresentePl3Rest [[ i | e ] r e ] -> 0 || _ "^" [ a n o ];
 
 # Rules for writing nouns
-define NounMPl [o | e] -> 0 || _ "^" i ;
-define NounFPl [a] -> 0 || _ "^" e ;
-define NounCGoEndingPl [o] -> h || C [c | g] _ "^" i ;
-define NounCGaEndingPl [a] -> h || [c | g] _ "^" e ;
-define NounProfessionPl a -> 0 || i s t _ "^" [e | i] ;
-define NounGreekPl a -> 0 || [m | t] _ "^" i ;
-define NounIoEndingPl [i o] -> 0 || _ "^" i ;
-define NounCiaEndingPl [i a] -> 0 || [c | g] _ "^" e ;
-define NounUomini [o -> [i n] || u o m _ "^" i] .o.
+define NounMPl [o | e] -> 0 || _ "*" i ;
+define NounFPl [a] -> 0 || _ "*" e ;
+define NounCGoEndingPl [o] -> h || C [c | g] _ "*" i ;
+define NounCGaEndingPl [a] -> h || [c | g] _ "*" e ;
+define NounProfessionPl a -> 0 || i s t _ "*" [e | i] ;
+define NounGreekPl a -> 0 || [m | t] _ "*" i ;
+define NounIoEndingPl [i o] -> 0 || _ "*" i ;
+define NounCiaEndingPl [i a] -> 0 || [c | g] _ "*" e ;
+define NounUomini [o -> [i n] || u o m _ "*" i] .o.
                   [o -> [i n i] || u o m _ "-"] ;
 
 # Rules for writing adjectives
-define AdjFSg [o] -> 0 || _ "^" a ;
-define AdjMPl [o | e] -> 0 || _ "^" i ;
-define AdjFPl [o] -> 0 || _ "^" e ;
-define AdjCGoEndingPl [o] -> h || C [c | g] _ "^" i ;
-define AdjCGaEndingPl [o] -> h || [c | g] _ "^" e ;
-define AdjProfessionPl a -> 0 || i s t _ "^" [e | i] ;
-define AdjCioEndingPl [i o] -> 0 || [c | g] _ "^" i ;
-define AdjCiaEndingPl [[i a] -> i || V [c | g] _ "^" e] |
-                [[i a] -> 0 || C [c | g] _ "^" e];
-define AdjPresenteParticipio [i -> e || _ r e "^" n t [e | i]] .o.
-                            [[r e] -> 0 || _ "^" n t [e | i]] ;
+define AdjFSg [o] -> 0 || _ "&" a ;
+define AdjMPl [o | e] -> 0 || _ "&" i ;
+define AdjFPl [o] -> 0 || _ "&" e ;
+define AdjCGoEndingPl [o] -> h || C [c | g] _ "&" i ;
+define AdjCGaEndingPl [o] -> h || [c | g] _ "&" e ;
+define AdjProfessionPl a -> 0 || i s t _ "&" [e | i] ;
+define AdjCioEndingPl [i o] -> 0 || [c | g] _ "&" i ;
+define AdjCiaEndingPl [[i a] -> i || V [c | g] _ "&" e] |
+                [[i a] -> 0 || C [c | g] _ "&" e];
+define AdjPresenteParticipio [i -> e || _ r e "&" n t [e | i]] .o.
+                            [[r e] -> 0 || _ "&" n t [e | i]] ;
 
 
 #ii is not common in this language. So only i$i will remain.
 define DoubleI [ i ] -> 0 || _ "^" i;
 
 #Cleanup: remove morpheme boundaries
-define Cleanup [ "^" | "$" | "\'" ] -> 0;
+define Cleanup [ "^" | "$" | "\'" | "*" | "&" ] -> 0;
+
+#This is required for guessing
+define Stem [ C^<3 V C^<3]+;
+define Any Stem [
+%s |
+%s |
+%s ];
 
 read lexc italian.lexc
 define Lexicon
 
-define Grammar Lexicon                        .o.
+define Grammar %s                             .o.
                VerbSolidK                     .o.
                VerbSolidKCond                 .o.
                VerbPresenteSg3SecondThird     .o.
@@ -198,7 +205,7 @@ define Grammar Lexicon                        .o.
 
 regex Grammar;
 save stack italian.bin
-""")
+""" % (any_rules[0], any_rules[1], any_rules[2], lexicon))
 
 def parse_words(iterable):
   N = set()
@@ -233,6 +240,32 @@ def print_rules(name, rules):
     output.write(rule + '\t#;\n')
   output.write("\n")
 
+def get_any(rules):
+  result = u''
+  for rule in rules:
+    if result:
+      result += '|'
+    result += '['
+    [lpart, rpart] = rule.split(':')
+    for word in lpart.split('+'):
+      if not word:
+        continue
+      result += '"+'
+      result += word
+      result += '"'
+    result += ']:'
+    if rpart != u'0':
+      result += '['
+      for letter in rpart:
+        result += '"'
+        result += letter
+        result += '"'
+      result += ']'
+    else:
+      result += '0'
+    result += '\n'
+  return result
+
 if __name__ == '__main__':
   (N, V, A) = parse_words(open('italian.txt.learn', 'r'))
   print_header()
@@ -243,9 +276,9 @@ if __name__ == '__main__':
   print_rules('Vinf', V_rules)
   print_rules('Ainf', A_rules)
 
-  print_foma()
+  print_foma((get_any(N_rules), get_any(V_rules), get_any(A_rules)), 'Any')
   output.close()
 
-  foma = subprocess.Popen([FOMA_PATH + 'foma', '-f', 'italian.foma'])
-  foma.communicate()
+  #foma = subprocess.Popen([FOMA_PATH + 'foma', '-f', 'italian.foma'])
+  #foma.communicate()
 
