@@ -49,7 +49,7 @@ if __name__ == '__main__':
           counts[key] = weight
 
     output = codecs.open('lemmas.txt', encoding='utf-8', mode='w+')
-    output2 = codecs.open('answer.txt', encoding='utf-8', mode='w+')
+    output2 = codecs.open('answer.txt', encoding='ISO-8859-1', mode='w+')
     words = set()
     for question, results in zip(questions, fomas):
       best = -1
@@ -61,8 +61,8 @@ if __name__ == '__main__':
         if counts[key] > best:
           best = counts[key]
           best_lemma = key
-      output2.write("%s\t%s" % (question, best_lemma))
+      output2.write("%s\t%s\n" % (question, best_lemma))
       words.add(best_lemma)
 
     lemmas = sorted(list(words))
-    ioutput.write(u'\n'.join(lemmas))
+    output.write(u'\n'.join(lemmas))
