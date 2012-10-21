@@ -139,41 +139,45 @@ define Cleanup [ "^" | "$" | "\'" ] -> 0;
 read lexc italian.lexc
 define Lexicon
 
-define Grammar Lexicon                         .o.
-               VerbSolidK                      .o.
-               VerbPresenteSg3SecondThird      .o.
-               VerbPresentePl2                 .o.
-               VerbPresentePl3First            .o.
-               VerbPresentePl3SecondThird      .o.
-               VerbFuturoSempliceFirst         .o.
-               VerbFuturoSempliceSecondThird   .o.
-               VerbPresenteSg3First            .o.
-               VerbPresenteSg3SecondThird      .o.
-               VerbPassatoRemoto1              .o.
-               VerbPassatoRemoto3First         .o.
-               VerbPassatoRemoto3Second        .o.
-               VerbPassatoRemoto3Third         .o.
-               VerbPassatoRemotoRest           .o.
-               VerbImperfetto                  .o.
-               VerbCondizionaleFirst           .o.
-               VerbCondizionaleRest            .o.
-               VerbCondizionalePassatoSecond   .o.
-               VerbCondizionalePassatoRest     .o.
-               VerbCongiuntivoImperfetto       .o.
-               VerbGerundioFirstSecond         .o.
-               VerbGerundioThird               .o.
-               VerbPresenteSg12Pl1             .o.
+define Grammar Lexicon                        .o.
+               VerbSolidK                     .o.
+               VerbPresenteSg3SecondThird     .o.
+               VerbPresentePl2                .o.
+               VerbPresentePl3First           .o.
+               VerbPresentePl3SecondThird     .o.
+               VerbFuturoSempliceFirst        .o.
+               VerbFuturoSempliceSecondThird  .o.
+               VerbPresenteSg3First           .o.
+               VerbPresenteSg3SecondThird     .o.
+               NounProfessionPl               .o.
+               NounGreekPl                    .o.
+               NounIoEndingPl                 .o.
+               NounCiaEndingPl                .o.
+               VerbPassatoRemoto1             .o.
+               VerbPassatoRemoto3First        .o.
+               VerbPassatoRemoto3Second       .o.
+               VerbPassatoRemoto3Third        .o.
+               VerbPassatoRemotoRest          .o.
+               VerbImperfetto                 .o.
+               VerbCondizionaleFirst          .o.
+               VerbCondizionaleRest           .o.
+               VerbCondizionalePassatoSecond  .o.
+               VerbCondizionalePassatoRest    .o.
+               VerbCongiuntivoImperfetto      .o.
+               VerbGerundioFirstSecond        .o.
+               VerbGerundioThird              .o.
+               VerbPresenteSg12Pl1            .o.
                VerbCongiuntivoPresenteSgRest   .o.
                VerbCongiuntivoPresentePl12     .o.
                VerbCongiuntivoPresentePl3First .o.
                VerbCongiuntivoPresentePl3Rest  .o.
                VerbCongiuntivoPresenteSgFirst  .o.
-               NounFPlSolidK                   .o.
-               NounMPl                         .o.
-               NounFPl                         .o.
-               AdjMPl	                       .o.
-               AdjFPl	                       .o.
-               VerbPresenteSg3First            .o. #This rule is really stupid. Need to be fixed
+               NounFPlSolidK                  .o.
+               NounMPl                        .o.
+               NounFPl                        .o.
+               AdjPresenteParticipio          .o.
+               AdjPassatoParticipio           .o.
+               VerbPresenteSg3First           .o. #This rule is really stupid. Need to be fixed
                DoubleI                        .o.
                Cleanup;
 
