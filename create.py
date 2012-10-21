@@ -279,6 +279,6 @@ if __name__ == '__main__':
   print_foma((get_any(N_rules), get_any(V_rules), get_any(A_rules)), 'Any')
   output.close()
 
-  #foma = subprocess.Popen([FOMA_PATH + 'foma', '-f', 'italian.foma'])
-  #foma.communicate()
+  foma = subprocess.Popen([FOMA_PATH + 'foma', '-f', 'italian.foma'])
+  foma.communicate()
 
