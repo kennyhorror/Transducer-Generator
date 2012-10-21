@@ -83,6 +83,7 @@ define Cond [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e 
 # Rules for writing verbs
 define VerbSolidKG [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] [ i | e | a n n o | a i | à | ò ];
 define VerbSolidKGCond [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] Cond;
+define VerbRemoveICond [i] -> 0 || [c | g] _ [ a r e ] ["^" | "$" ] Cond;
 define VerbPresenteSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m o ];
 define VerbPresenteSg3First [ r e "^" e ] -> "^" || [ a ] _;
 define VerbPresenteSg3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ e ];
@@ -161,6 +162,7 @@ define Lexicon
 define Grammar %s                             .o.
                VerbSolidKG                    .o.
                VerbSolidKGCond                .o.
+               VerbRemoveICond                .o.
                VerbPresenteSg3SecondThird     .o.
                VerbPresentePl2                .o.
                VerbPresentePl3First           .o.
