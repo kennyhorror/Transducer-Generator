@@ -1,6 +1,6 @@
 !!!italian.lexc!!!
 
-Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +F +M +Presente +FuturoSemplice +PassatoRemoto +Passato +Imperfetto +Condizionale +CondizionalePassato +CongiuntivoImperfetto +ParticipioPresente +Gerundio
+Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +F +M +Presente +Futuro +Semplice +Remoto +Passato +Part +Imperfetto +Condizionale +Congiuntivo +Participio +Gerundio
 
 LEXICON Root
 
@@ -15536,18 +15536,18 @@ LEXICON Vinf
 +V+Presente+Pl+1:^iamo	#;
 +V+Presente+Pl+2:^te	#;
 +V+Presente+Pl+3:^ono	#;
-+V+FuturoSemplice+Sg+1:^ò	#;
-+V+FuturoSemplice+Sg+2:^ai	#;
-+V+FuturoSemplice+Sg+3:^à	#;
-+V+FuturoSemplice+Pl+1:^emo	#;
-+V+FuturoSemplice+Pl+2:^ete	#;
-+V+FuturoSemplice+Pl+3:^anno	#;
-+V+PassatoRemoto+Sg+1:$i	#;
-+V+PassatoRemoto+Sg+2:^sti	#;
-+V+PassatoRemoto+Sg+3:^'	#;
-+V+PassatoRemoto+Pl+1:^mmo	#;
-+V+PassatoRemoto+Pl+2:^ste	#;
-+V+PassatoRemoto+Pl+3:^rono	#;
++V+Futuro+Semplice+Sg+1:^ò	#;
++V+Futuro+Semplice+Sg+2:^ai	#;
++V+Futuro+Semplice+Sg+3:^à	#;
++V+Futuro+Semplice+Pl+1:^emo	#;
++V+Futuro+Semplice+Pl+2:^ete	#;
++V+Futuro+Semplice+Pl+3:^anno	#;
++V+Passato+Remoto+Sg+1:$i	#;
++V+Passato+Remoto+Sg+2:^sti	#;
++V+Passato+Remoto+Sg+3:^'	#;
++V+Passato+Remoto+Pl+1:^mmo	#;
++V+Passato+Remoto+Pl+2:^ste	#;
++V+Passato+Remoto+Pl+3:^rono	#;
 +V+Imperfetto+Sg+1:^vo	#;
 +V+Imperfetto+Sg+2:^vi	#;
 +V+Imperfetto+Sg+3:^va	#;
@@ -15560,14 +15560,18 @@ LEXICON Vinf
 +V+Condizionale+Pl+1:^remmo	#;
 +V+Condizionale+Pl+2:^reste	#;
 +V+Condizionale+Pl+3:^rebbero	#;
-+V+CongiuntivoImperfetto+Sg+1:^ssl	#;
-+V+CongiuntivoImperfetto+Sg+2:^ssl	#;
-+V+CongiuntivoImperfetto+Sg+2:^sse	#;
-+V+CongiuntivoImperfetto+Sg+2:^ssimo	#;
-+V+CongiuntivoImperfetto+Sg+1:^ste	#;
-+V+CongiuntivoImperfetto+Sg+2:^ssero	#;
-+V+CondizionalePassato+Sg:^to	#;
-+V+CondizionalePassato+Pl:^ti	#;
++V+Congiuntivo+Imperfetto+Sg+1:^ssl	#;
++V+Congiuntivo+Imperfetto+Sg+2:^ssl	#;
++V+Congiuntivo+Imperfetto+Sg+2:^sse	#;
++V+Congiuntivo+Imperfetto+Sg+2:^ssimo	#;
++V+Congiuntivo+Imperfetto+Sg+1:^ste	#;
++V+Congiuntivo+Imperfetto+Sg+2:^ssero	#;
++V+Congiuntivo+Presente+Sg:^a	#;
++V+Congiuntivo+Presente+Pl+1:^iamo	#;
++V+Congiuntivo+Presente+Pl+2:^iate	#;
++V+Congiuntivo+Presente+Pl+3:^ano	#;
++V+Condizionale+Passato+Sg:^to	#;
++V+Condizionale+Passato+Pl:^ti	#;
 +V+Gerundio:^ndo	#;
 
 LEXICON Ainf
@@ -15576,6 +15580,6 @@ LEXICON Ainf
 +A+F+Sg:^a	#;
 +A+M+Pl:^i	#;
 +A+F+Pl:^e	#;
-+A+ParticipioPresente:^nte	#;
-+A+ParticipioPresente:^nti	#;
++A+Participio+Presente:^nte	#;
++A+Participio+Presente:^nti	#;
 

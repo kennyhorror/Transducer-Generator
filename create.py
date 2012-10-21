@@ -14,13 +14,13 @@ V_rules = (
     '+V+Presente+Sg+1:^o',    '+V+Presente+Sg+2:^i',   '+V+Presente+Sg+3:^e',
     '+V+Presente+Pl+1:^iamo', '+V+Presente+Pl+2:^te', '+V+Presente+Pl+3:^ono',
 
-    u'+V+FuturoSemplice+Sg+1:^ò', '+V+FuturoSemplice+Sg+2:^ai',
-    u'+V+FuturoSemplice+Sg+3:^à', '+V+FuturoSemplice+Pl+1:^emo',
-    '+V+FuturoSemplice+Pl+2:^ete','+V+FuturoSemplice+Pl+3:^anno',
+    u'+V+Futuro+Semplice+Sg+1:^ò', '+V+Futuro+Semplice+Sg+2:^ai',
+    u'+V+Futuro+Semplice+Sg+3:^à', '+V+Futuro+Semplice+Pl+1:^emo',
+    '+V+Futuro+Semplice+Pl+2:^ete','+V+Futuro+Semplice+Pl+3:^anno',
 
-    '+V+PassatoRemoto+Sg+1:$i', '+V+PassatoRemoto+Sg+2:^sti',
-    '+V+PassatoRemoto+Sg+3:^\'', '+V+PassatoRemoto+Pl+1:^mmo',
-    '+V+PassatoRemoto+Pl+2:^ste', '+V+PassatoRemoto+Pl+3:^rono',
+    '+V+Passato+Remoto+Sg+1:$i', '+V+Passato+Remoto+Sg+2:^sti',
+    '+V+Passato+Remoto+Sg+3:^\'', '+V+Passato+Remoto+Pl+1:^mmo',
+    '+V+Passato+Remoto+Pl+2:^ste', '+V+Passato+Remoto+Pl+3:^rono',
 
     '+V+Imperfetto+Sg+1:^vo', '+V+Imperfetto+Sg+2:^vi',
     '+V+Imperfetto+Sg+3:^va', '+V+Imperfetto+Pl+1:^vamo',
@@ -30,19 +30,22 @@ V_rules = (
     '+V+Condizionale+Sg+3:^rebbe', '+V+Condizionale+Pl+1:^remmo',
     '+V+Condizionale+Pl+2:^reste', '+V+Condizionale+Pl+3:^rebbero',
 
-    '+V+CongiuntivoImperfetto+Sg+1:^ssl', '+V+CongiuntivoImperfetto+Sg+2:^ssl',
-    '+V+CongiuntivoImperfetto+Sg+2:^sse',
-    '+V+CongiuntivoImperfetto+Sg+2:^ssimo',
-    '+V+CongiuntivoImperfetto+Sg+1:^ste',
-    '+V+CongiuntivoImperfetto+Sg+2:^ssero',
+    '+V+Congiuntivo+Imperfetto+Sg+1:^ssl', '+V+Congiuntivo+Imperfetto+Sg+2:^ssl',
+    '+V+Congiuntivo+Imperfetto+Sg+2:^sse',
+    '+V+Congiuntivo+Imperfetto+Sg+2:^ssimo',
+    '+V+Congiuntivo+Imperfetto+Sg+1:^ste',
+    '+V+Congiuntivo+Imperfetto+Sg+2:^ssero',
+
+    '+V+Congiuntivo+Presente+Sg:^a', '+V+Congiuntivo+Presente+Pl+1:^iamo',
+    '+V+Congiuntivo+Presente+Pl+2:^iate', '+V+Congiuntivo+Presente+Pl+3:^ano',
     
-    '+V+CondizionalePassato+Sg:^to', '+V+CondizionalePassato+Pl:^ti',
+    '+V+Condizionale+Passato+Sg:^to', '+V+Condizionale+Passato+Pl:^ti',
     '+V+Gerundio:^ndo',
 )
 
 A_rules = (
     '+A+M+Sg:0', '+A+F+Sg:^a', '+A+M+Pl:^i', '+A+F+Pl:^e',
-    '+A+ParticipioPresente:^nte', '+A+ParticipioPresente:^nti'
+    '+A+Participio+Presente:^nte', '+A+Participio+Presente:^nti'
 )
 
 output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
@@ -50,7 +53,7 @@ output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
 def print_header():
   output.write(u"""!!!italian.lexc!!!
 
-Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +F +M +Presente +FuturoSemplice +PassatoRemoto +Passato +Imperfetto +Condizionale +CondizionalePassato +CongiuntivoImperfetto +ParticipioPresente +Gerundio
+Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +F +M +Presente +Futuro +Semplice +Remoto +Passato +Part +Imperfetto +Condizionale +Congiuntivo +Participio +Gerundio
 
 LEXICON Root
 
@@ -66,9 +69,10 @@ def print_foma():
 
 define V [a | o | u | e | i] ;
 define C [b | c | d | f | g | h | j | k | l | m | n | p | q | r | s | t | v | w | x | y | z];
-
+define Cond [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o ];
 # Rules for writing verbs
-define VerbSolidK [a r e] -> h || [c] _ "^" [i | e];
+define VerbSolidK [..] -> [ h ] || [ c ] _ [ a r e ] [ "^" | "$" ] [ i | e ];
+define VerbSolidKCond [..] -> [ h ] || [ c ] _ [ a r e ] [ "^" | "$" ] Cond;
 define VerbPresenteSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m o ];
 define VerbPresenteSg3First [ r e "^" e ] -> "^" || [ a ] _;
 define VerbPresenteSg3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ e ];
@@ -77,7 +81,7 @@ define VerbPresentePl3First [ r e "^" o ] -> "^" || [ a ] _ [ n o ];
 define VerbPresentePl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
 
 define VerbFuturoSempliceFirst [ a r e ] -> [ e r ] ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
-define VerbFuturoSempliceSecondThird e -> 0 || [ i r | e r ]  _ "^" [ ò | a i | à | e m o | e t e | a n n o];
+define VerbFuturoSempliceSecondThird [ e ] -> 0 || [ i r | e r ]  _ "^" [ ò | a i | à | e m o | e t e | a n n o];
 
 #Experimental
 define VerbPassatoRemoto1 [ r e ] -> 0 || [ a | e | i ] _ "$" [ i ];
@@ -87,8 +91,8 @@ define VerbPassatoRemoto3Third [ i r e ] "^" -> "ì" || _ "\'";
 define VerbPassatoRemotoRest [ r e ] -> 0 || [ a | e | i ] _ "^" [ s t i | m m o | r o n o];
 
 define VerbImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ v o | v i | v a ];
-define VerbCondizionaleFirst [ a r e ] -> e || _ "^" [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o ];
-define VerbCondizionaleRest [ r e ] -> 0 || [ e | i ] _ "^" [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o ];
+define VerbCondizionaleFirst [ a r e ] -> e || _ "^" Cond;
+define VerbCondizionaleRest [ r e ] -> 0 || [ e | i ] _ "^" Cond;
 
 define VerbCondizionalePassatoSecond [ e r e ] -> u ||  _ "^" [ t o ];
 define VerbCondizionalePassatoRest [ r e ] -> 0 || [ a | i ] _ "^" [ t o | t i ];
@@ -96,6 +100,11 @@ define VerbCondizionalePassatoRest [ r e ] -> 0 || [ a | i ] _ "^" [ t o | t i ]
 define VerbCongiuntivoImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ s s l | s s e | s s i m o | s t e | s s e r o ];
 define VerbGerundioFirstSecond [ r e ] -> 0 || [ a | e ] _ "^" [ n d o ];
 define VerbGerundioThird [ i r e ] -> e || _ "^" [ n d o ];
+define VerbCongiuntivoPresenteSgFirst [ a r e ] "^" [ a ] -> [ i ] || _;
+define VerbCongiuntivoPresenteSgRest [ i | e ] [ r e ] -> 0 || _ "^" [ a ];
+define VerbCongiuntivoPresentePl12 [ a | i | e ] [ r e ] -> 0 || _ "^" [ i a m o | i a t e];
+define VerbCongiuntivoPresentePl3First [ a r e ] "^" [ a ] -> "^" [ i ] || _ [ n o ];
+define VerbCongiuntivoPresentePl3Rest [[ i | e ] r e ] -> 0 || _ "^" [ a n o ];
 
 # Rules for writing nouns
 define NounMPl [o | e] -> 0 || _ "^" i ;
@@ -134,6 +143,7 @@ define Lexicon
 
 define Grammar Lexicon                        .o.
                VerbSolidK                     .o.
+               VerbSolidKCond                 .o.
                VerbPresenteSg3SecondThird     .o.
                VerbPresentePl2                .o.
                VerbPresentePl3First           .o.
@@ -169,6 +179,11 @@ define Grammar Lexicon                        .o.
                NounCGaEndingPl                .o.
                AdjCGoEndingPl                 .o.
                AdjCGaEndingPl                 .o.
+               VerbCongiuntivoPresenteSgRest   .o.
+               VerbCongiuntivoPresentePl12     .o.
+               VerbCongiuntivoPresentePl3First .o.
+               VerbCongiuntivoPresentePl3Rest  .o.
+               VerbCongiuntivoPresenteSgFirst  .o.
                NounMPl                        .o.
                NounFPl                        .o.
                AdjFSg                         .o.
