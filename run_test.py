@@ -3,7 +3,7 @@
 import codecs
 import subprocess
 
-from configlocal import FOMA_PATH
+from config import FOMA_PATH
 
 
 if __name__ == '__main__':
