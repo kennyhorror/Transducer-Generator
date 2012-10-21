@@ -24,23 +24,29 @@ V_rules = (
     '+V+Passato+Remoto+Sg+1:$i', '+V+Passato+Remoto+Sg+2:^sti',
     '+V+Passato+Remoto+Sg+3:^\'', '+V+Passato+Remoto+Pl+1:^mmo',
     '+V+Passato+Remoto+Pl+2:^ste', '+V+Passato+Remoto+Pl+3:^rono',
+    '+V+Passato+Remoto+Pl+3+Fake:^ron',
 
     '+V+Imperfetto+Sg+1:^vo', '+V+Imperfetto+Sg+2:^vi',
     '+V+Imperfetto+Sg+3:^va', '+V+Imperfetto+Pl+1:^vamo',
     '+V+Imperfetto+Pl+2:^vate', '+V+Imperfetto+Pl+3:^vano',
+    '+V+Imperfetto+Pl+3+Fake:^van',
 
     '+V+Condizionale+Sg+1:^rei', '+V+Condizionale+Sg+2:^resti',
     '+V+Condizionale+Sg+3:^rebbe', '+V+Condizionale+Pl+1:^remmo',
     '+V+Condizionale+Pl+2:^reste', '+V+Condizionale+Pl+3:^rebbero',
+    '+V+Condizionale+Pl+3+Fake:^rebber',
 
     '+V+Congiuntivo+Imperfetto+Sg+1:^ssl', '+V+Congiuntivo+Imperfetto+Sg+2:^ssl',
-    '+V+Congiuntivo+Imperfetto+Sg+2:^sse',
-    '+V+Congiuntivo+Imperfetto+Sg+2:^ssimo',
-    '+V+Congiuntivo+Imperfetto+Sg+1:^ste',
-    '+V+Congiuntivo+Imperfetto+Sg+2:^ssero',
+    '+V+Congiuntivo+Imperfetto+Sg+3:^sse',
+    '+V+Congiuntivo+Imperfetto+Pl+1:^ssimo',
+    '+V+Congiuntivo+Imperfetto+Pl+2:^ste',
+    '+V+Congiuntivo+Imperfetto+Pl+3:^ssero',
+    '+V+Congiuntivo+Imperfetto+Pl+1+Fake:^ssi',
+    '+V+Congiuntivo+Imperfetto+Pl+3+Fake:^sser',
 
     '+V+Congiuntivo+Presente+Sg:^a', '+V+Congiuntivo+Presente+Pl+1:^iamo',
     '+V+Congiuntivo+Presente+Pl+2:^iate', '+V+Congiuntivo+Presente+Pl+3:^ano',
+    '+V+Congiuntivo+Presente+Pl+3+Fake:^an',
     
     '+V+Condizionale+Passato+Sg:^to', '+V+Condizionale+Passato+Pl:^ti',
     '+V+Gerundio:^ndo',
@@ -56,7 +62,7 @@ output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
 def print_header():
   output.write(u"""!!!italian.lexc!!!
 
-Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +F +M +Presente +Futuro +Semplice +Remoto +Passato +Part +Imperfetto +Condizionale +Congiuntivo +Participio +Gerundio
+Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +F +M +Presente +Futuro +Semplice +Remoto +Passato +Part +Imperfetto +Condizionale +Congiuntivo +Participio +Gerundio +Fake
 
 LEXICON Root
 
@@ -72,9 +78,9 @@ def print_foma(any_rules, lexicon = "Lexicon"):
 
 define V [a | o | u | e | i] ;
 define C [b | c | d | f | g | h | j | k | l | m | n | p | q | r | s | t | v | w | x | y | z];
-define Cond [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o ];
+define Cond [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o | r e b b e r ];
 # Rules for writing verbs
-define VerbSolidKG [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] [ i | e ];
+define VerbSolidKG [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] [ i | e | a n n o | a i | \' ];
 define VerbSolidKGCond [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] Cond;
 define VerbPresenteSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m o ];
 define VerbPresenteSg3First [ r e "^" e ] -> "^" || [ a ] _;
@@ -83,15 +89,15 @@ define VerbPresentePl2 [ r e ] -> 0 || [a | e | i ] _ "^" [ t e ];
 define VerbPresentePl3First [ r e "^" o ] -> "^" || [ a ] _ [ n o ];
 define VerbPresentePl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
 
-define VerbFuturoSempliceFirst [ a r e ] -> [ e r ] ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
-define VerbFuturoSempliceSecondThird [ e ] -> 0 || [ i r | e r ]  _ "^" [ ò | a i | à | e m o | e t e | a n n o];
+define VerbFuturoSempliceFirst [ a r e ] -> [ e r ] ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o ]; 
+define VerbFuturoSempliceSecondThird [ e ] -> 0 || [ i r | e r ]  _ "^" [ ò | a i | à | e m o | e t e | a n n o ];
 
 #Experimental
 define VerbPassatoRemoto1 [ r e ] -> 0 || [ a | e | i ] _ "$" [ i ];
 define VerbPassatoRemoto3First [ a r e ] "^" -> "ò" || _ "\'";
 define VerbPassatoRemoto3Second [ r e ] "^" -> 0 || _ "\'";
 define VerbPassatoRemoto3Third [ i r e ] "^" -> "ì" || _ "\'";
-define VerbPassatoRemotoRest [ r e ] -> 0 || [ a | e | i ] _ "^" [ s t i | m m o | r o n o];
+define VerbPassatoRemotoRest [ r e ] -> 0 || [ a | e | i ] _ "^" [ s t i | m m o | r o n o | r o n ];
 
 define VerbImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ v o | v i | v a ];
 define VerbCondizionaleFirst [ a r e ] -> e || _ "^" Cond;
@@ -100,14 +106,14 @@ define VerbCondizionaleRest [ r e ] -> 0 || [ e | i ] _ "^" Cond;
 define VerbCondizionalePassatoSecond [ e r e ] -> u ||  _ "^" [ t o ];
 define VerbCondizionalePassatoRest [ r e ] -> 0 || [ a | i ] _ "^" [ t o | t i ];
 
-define VerbCongiuntivoImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ s s l | s s e | s s i m o | s t e | s s e r o ];
+define VerbCongiuntivoImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ s s l | s s e | s s i m o | s t e | s s e r o | s s e r | s s i ];
 define VerbGerundioFirstSecond [ r e ] -> 0 || [ a | e ] _ "^" [ n d o ];
 define VerbGerundioThird [ i r e ] -> e || _ "^" [ n d o ];
 define VerbCongiuntivoPresenteSgFirst [ a r e ] "^" [ a ] -> [ i ] || _;
 define VerbCongiuntivoPresenteSgRest [ i | e ] [ r e ] -> 0 || _ "^" [ a ];
 define VerbCongiuntivoPresentePl12 [ a | i | e ] [ r e ] -> 0 || _ "^" [ i a m o | i a t e];
 define VerbCongiuntivoPresentePl3First [ a r e ] "^" [ a ] -> "^" [ i ] || _ [ n o ];
-define VerbCongiuntivoPresentePl3Rest [[ i | e ] r e ] -> 0 || _ "^" [ a n o ];
+define VerbCongiuntivoPresentePl3Rest [[ i | e ] r e ] -> 0 || _ "^" [ a n o | a n ];
 
 # Rules for writing nouns
 define NounMPl [o | e] -> 0 || _ "*" i ;
@@ -276,7 +282,7 @@ if __name__ == '__main__':
   print_rules('Vinf', V_rules)
   print_rules('Ainf', A_rules)
 
-  print_foma((get_any(N_rules), get_any(V_rules), get_any(A_rules)), 'Any')
+  print_foma((get_any(N_rules), get_any(V_rules), get_any(A_rules)))
   output.close()
 
   foma = subprocess.Popen([FOMA_PATH + 'foma', '-f', 'italian.foma'])
