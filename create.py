@@ -74,8 +74,8 @@ define V [a | o | u | e | i] ;
 define C [b | c | d | f | g | h | j | k | l | m | n | p | q | r | s | t | v | w | x | y | z];
 define Cond [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o ];
 # Rules for writing verbs
-define VerbSolidK [..] -> [ h ] || [ c ] _ [ a r e ] [ "^" | "$" ] [ i | e ];
-define VerbSolidKCond [..] -> [ h ] || [ c ] _ [ a r e ] [ "^" | "$" ] Cond;
+define VerbSolidKG [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] [ i | e ];
+define VerbSolidKGCond [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] Cond;
 define VerbPresenteSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m o ];
 define VerbPresenteSg3First [ r e "^" e ] -> "^" || [ a ] _;
 define VerbPresenteSg3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ e ];
@@ -152,8 +152,8 @@ read lexc italian.lexc
 define Lexicon
 
 define Grammar %s                             .o.
-               VerbSolidK                     .o.
-               VerbSolidKCond                 .o.
+               VerbSolidKG                    .o.
+               VerbSolidKGCond                .o.
                VerbPresenteSg3SecondThird     .o.
                VerbPresentePl2                .o.
                VerbPresentePl3First           .o.
