@@ -20,6 +20,7 @@ V_rules = (
     u'+V+Futuro+Semplice+Sg+1:^ò', '+V+Futuro+Semplice+Sg+2:^ai',
     u'+V+Futuro+Semplice+Sg+3:^à', '+V+Futuro+Semplice+Pl+1:^emo',
     '+V+Futuro+Semplice+Pl+2:^ete','+V+Futuro+Semplice+Pl+3:^anno',
+    '+V+Futuro+Semplice+Pl+2+Fake:^eta',
 
     '+V+Passato+Remoto+Sg+1:$i', '+V+Passato+Remoto+Sg+2:^sti',
     '+V+Passato+Remoto+Sg+3:^\'', '+V+Passato+Remoto+Pl+1:^mmo',
@@ -76,11 +77,11 @@ def print_foma(any_rules, lexicon = "Lexicon"):
   output = codecs.open('italian.foma', encoding='utf-8', mode='w+')
   output.write(u"""### italian.foma ###
 
-define V [a | o | u | e | i] ;
-define C [b | c | d | f | g | h | j | k | l | m | n | p | q | r | s | t | v | w | x | y | z];
+define V [a | o | u | e | i | ò | ì | à ];
+define C [b | c | d | f | g | h | j | k | l | m | n | p | q | r | s | t | v | w | x | y | z | "-"];
 define Cond [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o | r e b b e r ];
 # Rules for writing verbs
-define VerbSolidKG [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] [ i | e | a n n o | a i | \' ];
+define VerbSolidKG [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] [ i | e | a n n o | a i | à | ò ];
 define VerbSolidKGCond [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] Cond;
 define VerbPresenteSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m o ];
 define VerbPresenteSg3First [ r e "^" e ] -> "^" || [ a ] _;
@@ -90,30 +91,30 @@ define VerbPresentePl3First [ r e "^" o ] -> "^" || [ a ] _ [ n o ];
 define VerbPresentePl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
 
 define VerbFuturoSempliceFirst [ a r e ] -> [ e r ] ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o ]; 
-define VerbFuturoSempliceSecondThird [ e ] -> 0 || [ i r | e r ]  _ "^" [ ò | a i | à | e m o | e t e | a n n o ];
+define VerbFuturoSempliceSecondThird [ e ] -> 0 || [ i r | e r ]  _ "^" [ ò | a i | à | e m o | e t e | a n n o | e t a ];
 
 #Experimental
 define VerbPassatoRemoto1 [ r e ] -> 0 || [ a | e | i ] _ "$" [ i ];
 define VerbPassatoRemoto3First [ a r e ] "^" -> "ò" || _ "\'";
 define VerbPassatoRemoto3Second [ r e ] "^" -> 0 || _ "\'";
 define VerbPassatoRemoto3Third [ i r e ] "^" -> "ì" || _ "\'";
-define VerbPassatoRemotoRest [ r e ] -> 0 || [ a | e | i ] _ "^" [ s t i | m m o | r o n o | r o n ];
+define VerbPassatoRemotoRest [ r e "^" ] -> "~" || [ a | e | i ] _ [ s t i | m m o | r o n o | r o n ];
 
-define VerbImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ v o | v i | v a ];
-define VerbCondizionaleFirst [ a r e ] -> e || _ "^" Cond;
-define VerbCondizionaleRest [ r e ] -> 0 || [ e | i ] _ "^" Cond;
+define VerbImperfetto [ r e "^" ] -> "~" || [ a | e | i ] _ [ v o | v i | v a ];
+define VerbCondizionaleFirst [ a r e "^" ] -> e "~" || _ Cond;
+define VerbCondizionaleRest [ r e "^" ] -> "~" || [ e | i ] _ Cond;
 
-define VerbCondizionalePassatoSecond [ e r e ] -> u ||  _ "^" [ t o ];
-define VerbCondizionalePassatoRest [ r e ] -> 0 || [ a | i ] _ "^" [ t o | t i ];
+define VerbCondizionalePassatoSecond [ e r e "^" ] -> u "~" ||  _ [ t o ];
+define VerbCondizionalePassatoRest [ r e "^" ] -> "~" || [ a | i ] _ [ t o | t i ];
 
-define VerbCongiuntivoImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ s s l | s s e | s s i m o | s t e | s s e r o | s s e r | s s i ];
-define VerbGerundioFirstSecond [ r e ] -> 0 || [ a | e ] _ "^" [ n d o ];
-define VerbGerundioThird [ i r e ] -> e || _ "^" [ n d o ];
+define VerbCongiuntivoImperfetto [ r e "^" ] -> "~" || [ a | e | i ] _ [ s s l | s s e | s s i m o | s t e | s s e r o | s s e r | s s i ];
+define VerbGerundioFirstSecond [ r e "^" ] -> "~" || [ a | e ] _ [ n d o ];
+define VerbGerundioThird [ i r e "^" ] -> e "~" || _ [ n d o ];
 define VerbCongiuntivoPresenteSgFirst [ a r e ] "^" [ a ] -> [ i ] || _;
-define VerbCongiuntivoPresenteSgRest [ i | e ] [ r e ] -> 0 || _ "^" [ a ];
+define VerbCongiuntivoPresenteSgRest [ i | e ] [ r e "^" ] -> "~" || _ [ a ];
 define VerbCongiuntivoPresentePl12 [ a | i | e ] [ r e ] -> 0 || _ "^" [ i a m o | i a t e];
-define VerbCongiuntivoPresentePl3First [ a r e ] "^" [ a ] -> "^" [ i ] || _ [ n o ];
-define VerbCongiuntivoPresentePl3Rest [[ i | e ] r e ] -> 0 || _ "^" [ a n o | a n ];
+define VerbCongiuntivoPresentePl3First [ a r e ] "^" [ a ] -> "~" [ i ] || _ [ n o ];
+define VerbCongiuntivoPresentePl3Rest [ i | e ][ r e "^" ] -> "~" || _ [ a n o | a n ];
 
 # Rules for writing nouns
 define NounMPl [o | e] -> 0 || _ "*" i ;
@@ -145,10 +146,10 @@ define AdjPresenteParticipio [i -> e || _ r e "&" n t [e | i]] .o.
 define DoubleI [ i ] -> 0 || _ "^" i;
 
 #Cleanup: remove morpheme boundaries
-define Cleanup [ "^" | "$" | "\'" | "*" | "&" ] -> 0;
+define Cleanup [ "^" | "$" | "\'" | "*" | "&" | "~" ] -> 0;
 
 #This is required for guessing
-define Stem [ C^<3 V C^<3]+;
+define Stem [ C^<4 V C^<4]+;
 define Any Stem [
 %s |
 %s |
@@ -195,10 +196,10 @@ define Grammar %s                             .o.
                NounCGaEndingPl                .o.
                AdjCGoEndingPl                 .o.
                AdjCGaEndingPl                 .o.
-               VerbCongiuntivoPresenteSgRest   .o.
                VerbCongiuntivoPresentePl12     .o.
                VerbCongiuntivoPresentePl3First .o.
                VerbCongiuntivoPresentePl3Rest  .o.
+               VerbCongiuntivoPresenteSgRest   .o.
                VerbCongiuntivoPresenteSgFirst  .o.
                NounMPl                        .o.
                NounFPl                        .o.
