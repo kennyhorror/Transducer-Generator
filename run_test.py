@@ -3,12 +3,8 @@
 import codecs
 import subprocess
 
-FOMA_PATH = './'
+from configlocal import FOMA_PATH
 
-try:
-    from configlocal import *
-except:
-    pass
 
 if __name__ == '__main__':
     questions = []

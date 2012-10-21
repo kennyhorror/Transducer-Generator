@@ -4,6 +4,9 @@
 import sys
 import os
 import codecs
+import subprocess
+
+from config import FOMA_PATH
 
 N_rules = (
     '+N+Sg:0', '+N+Pl:^i', '+N+Pl:^e',
@@ -241,4 +244,8 @@ if __name__ == '__main__':
   print_rules('Ainf', A_rules)
 
   print_foma()
+  output.close()
+
+  foma = subprocess.Popen([FOMA_PATH + 'foma', '-f', 'italian.foma'])
+  foma.communicate()
 
