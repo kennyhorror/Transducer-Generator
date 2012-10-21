@@ -99,10 +99,14 @@ define Grammar Lexicon                        .o.
                VerbPresentePl2                .o.
                VerbPresentePl3First           .o.
                VerbPresentePl3SecondThird     .o.
+               NounProfessionPl               .o.
+               NounGreekPl                    .o.
+               NounIoEndingPl                 .o.
+               NounCiaEndingPl                .o.
                NounMPl                        .o.
                NounFPl                        .o.
-               AdjMPl	                      .o.
-               AdjFPl	                      .o.
+               AdjPresenteParticipio          .o.
+               AdjPassatoParticipio           .o.
                VerbPresenteSg3First           .o. #This rule is really stupid. Need to be fixed
                Cleanup;
 
