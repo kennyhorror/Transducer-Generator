@@ -17,6 +17,27 @@ V_rules = (
     u'+V+FuturoSemplice+Sg+1:^ò', '+V+FuturoSemplice+Sg+2:^ai',
     u'+V+FuturoSemplice+Sg+3:^à', '+V+FuturoSemplice+Pl+1:^emo',
     '+V+FuturoSemplice+Pl+2:^ete','+V+FuturoSemplice+Pl+3:^anno',
+
+    '+V+PassatoRemoto+Sg+1:$i', '+V+PassatoRemoto+Sg+2:^sti',
+    '+V+PassatoRemoto+Sg+3:^\'', '+V+PassatoRemoto+Pl+1:^mmo',
+    '+V+PassatoRemoto+Pl+2:^ste', '+V+PassatoRemoto+Pl+3:^rono',
+
+    '+V+Imperfetto+Sg+1:^vo', '+V+Imperfetto+Sg+2:^vi',
+    '+V+Imperfetto+Sg+3:^va', '+V+Imperfetto+Pl+1:^vamo',
+    '+V+Imperfetto+Pl+2:^vate', '+V+Imperfetto+Pl+3:^vano',
+
+    '+V+Condizionale+Sg+1:^rei', '+V+Condizionale+Sg+2:^resti',
+    '+V+Condizionale+Sg+3:^rebbe', '+V+Condizionale+Pl+1:^remmo',
+    '+V+Condizionale+Pl+2:^reste', '+V+Condizionale+Pl+3:^rebbero',
+
+    '+V+CongiuntivoImperfetto+Sg+1:^ssl', '+V+CongiuntivoImperfetto+Sg+2:^ssl',
+    '+V+CongiuntivoImperfetto+Sg+2:^sse',
+    '+V+CongiuntivoImperfetto+Sg+2:^ssimo',
+    '+V+CongiuntivoImperfetto+Sg+1:^ste',
+    '+V+CongiuntivoImperfetto+Sg+2:^ssero',
+    
+    '+V+CondizionalePassato+Sg:^to', '+V+CondizionalePassato+Pl:^ti',
+    '+V+Gerundio:^ndo',
 )
 
 A_rules = (
@@ -30,7 +51,7 @@ output = codecs.open('italian.lexc', encoding='utf-8', mode='w+')
 def print_header():
   output.write(u"""!!!italian.lexc!!!
 
-Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +FuturoSemplice +Passato +Part
+Multichar_Symbols +N +V +A +Sg +Pl +1 +2 +3 +Presente +FuturoSemplice +PassatoRemoto +Passato +Part +Imperfetto +Condizionale +CondizionalePassato +CongiuntivoImperfetto +ParticipioPresente +Gerundio
 
 LEXICON Root
 
@@ -48,17 +69,37 @@ define V [a | o | u | e | i] ;
 define C [b | c | d | f | g | h | j | k | l | m | n | p | q | r | s | t | v | w | x | y | z];
 
 # Rules for writing verbs
+define VerbSolidK [a r e] -> h || [c] _ "^" [i | e];
 define VerbPresenteSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m o ];
 define VerbPresenteSg3First [ r e "^" e ] -> "^" || [ a ] _;
 define VerbPresenteSg3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ e ];
 define VerbPresentePl2 [ r e ] -> 0 || [a | e | i ] _ "^" [ t e ];
-define VerbPresentePl3First [ a r e ] -> a || _ "^" [ n o ];
+define VerbPresentePl3First [ r e "^" o ] -> "^" || [ a ] _ [ n o ];
 define VerbPresentePl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
 
-define VerbFuturoSempliceFirst [ a r e ] -> "er" ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
-define VerbFuturoSempliceSecondThird e -> 0 || [ i r | a r]  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
+define VerbFuturoSempliceFirst [ a r e ] -> [ e r ] ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o]; 
+define VerbFuturoSempliceSecondThird e -> 0 || [ i r | e r ]  _ "^" [ ò | a i | à | e m o | e t e | a n n o];
+
+#Experimental
+define VerbPassatoRemoto1 [ r e ] -> 0 || [ a | e | i ] _ "$" [ i ];
+define VerbPassatoRemoto3First [ a r e ] "^" -> "ò" || _ "\'";
+define VerbPassatoRemoto3Second [ r e ] "^" -> 0 || _ "\'";
+define VerbPassatoRemoto3Third [ i r e ] "^" -> "ì" || _ "\'";
+define VerbPassatoRemotoRest [ r e ] -> 0 || [ a | e | i ] _ "^" [ s t i | m m o | r o n o];
+
+define VerbImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ v o | v i | v a ];
+define VerbCondizionaleFirst [ a r e ] -> e || _ "^" [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o ];
+define VerbCondizionaleRest [ r e ] -> 0 || [ e | i ] _ "^" [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o ];
+
+define VerbCondizionalePassatoSecond [ e r e ] -> u ||  _ "^" [ t o ];
+define VerbCondizionalePassatoRest [ r e ] -> 0 || [ a | i ] _ "^" [ t o | t i ];
+
+define VerbCongiuntivoImperfetto [ r e ] -> 0 || [ a | e | i ] _ "^" [ s s l | s s e | s s i m o | s t e | s s e r o ];
+define VerbGerundioFirstSecond [ r e ] -> 0 || [ a | e ] _ "^" [ n d o ];
+define VerbGerundioThird [ i r e ] -> e || _ "^" [ n d o ];
 
 # Rules for writing nouns
+define NounFPlSolidK [a] -> h || _ "^" e;
 define NounMPl [o | e] -> 0 || _ "^" i ;
 define NounFPl [a] -> 0 || _ "^" e ;
 define NounProfessionPl a -> 0 || i s t _ "^" [e | i] ;
@@ -80,14 +121,18 @@ define AdjPresenteParticipio [i -> e || _ r e "^" n t [e | i]] .o.
                             [[r e] -> 0 || _ "^" n t [e | i]] ;
 define AdjPassatoParticipio [t o] -> 0 || [a | u | i] _ "^" t [e | i | a] ;
 
+
+#ii is not common in this language. So only i$i will remain.
+define DoubleI [ i ] -> 0 || _ "^" i;
+
 #Cleanup: remove morpheme boundaries
-define Cleanup "^" -> 0;
+define Cleanup [ "^" | "$" | "\'" ] -> 0;
 
 read lexc italian.lexc
 define Lexicon
 
-define Grammar Lexicon                        .o. 
-               VerbPresenteSg12Pl1            .o.
+define Grammar Lexicon                        .o.
+               VerbSolidK                     .o.
                VerbPresenteSg3SecondThird     .o.
                VerbPresentePl2                .o.
                VerbPresentePl3First           .o.
@@ -96,18 +141,31 @@ define Grammar Lexicon                        .o.
                VerbFuturoSempliceSecondThird  .o.
                VerbPresenteSg3First           .o.
                VerbPresenteSg3SecondThird     .o.
-               VerbPresentePl2                .o.
-               VerbPresentePl3First           .o.
-               VerbPresentePl3SecondThird     .o.
                NounProfessionPl               .o.
                NounGreekPl                    .o.
                NounIoEndingPl                 .o.
                NounCiaEndingPl                .o.
+               VerbPassatoRemoto1             .o.
+               VerbPassatoRemoto3First        .o.
+               VerbPassatoRemoto3Second       .o.
+               VerbPassatoRemoto3Third        .o.
+               VerbPassatoRemotoRest          .o.
+               VerbImperfetto                 .o.
+               VerbCondizionaleFirst          .o.
+               VerbCondizionaleRest           .o.
+               VerbCondizionalePassatoSecond  .o.
+               VerbCondizionalePassatoRest    .o.
+               VerbCongiuntivoImperfetto      .o.
+               VerbGerundioFirstSecond        .o.
+               VerbGerundioThird              .o.
+               VerbPresenteSg12Pl1            .o.
+               NounFPlSolidK                  .o.
                NounMPl                        .o.
                NounFPl                        .o.
                AdjPresenteParticipio          .o.
                AdjPassatoParticipio           .o.
                VerbPresenteSg3First           .o. #This rule is really stupid. Need to be fixed
+               DoubleI                        .o.
                Cleanup;
 
 regex Grammar;

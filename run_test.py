@@ -3,6 +3,13 @@
 import codecs
 import subprocess
 
+FOMA_PATH = "./"
+
+try:
+    from configlocal import *
+except:
+    pass
+
 if __name__ == '__main__':
   words = [u'source italian.foma\nup\n']
   questions = []
@@ -13,7 +20,7 @@ if __name__ == '__main__':
     words.append(columns[0].decode("ISO-8859-1") + u'\n')
     answers.append(u''.join(map(lambda x:x.decode("ISO-8859-1"), columns[1:])))
   stdin = u''.join(words[:1000])
-  process = subprocess.Popen("./foma", stdin = subprocess.PIPE,
+  process = subprocess.Popen(FOMA_PATH + "foma", stdin = subprocess.PIPE,
       stdout = subprocess.PIPE, stderr = subprocess.PIPE)
   stdout, stderr = process.communicate(stdin.encode('utf-8'))
   output = codecs.open('italian.txt.result', encoding='utf-8', mode='w+')
