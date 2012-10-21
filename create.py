@@ -194,7 +194,7 @@ define Grammar Lexicon                        .o.
                Cleanup;
 
 regex Grammar;
-
+save stack italian.bin
 """)
 
 def parse_words(iterable):
@@ -241,3 +241,4 @@ if __name__ == '__main__':
   print_rules('Ainf', A_rules)
 
   print_foma()
+

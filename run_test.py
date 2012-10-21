@@ -11,22 +11,22 @@ except:
     pass
 
 if __name__ == '__main__':
-    words = [u'source italian.foma\nup\n']
+    words = []
     questions = []
     answers = []
 
     for line in open('italian.txt.learn', 'r'):
         columns = line.split()
         questions.append(columns[0].decode("ISO-8859-1"))
-        words.append(columns[0].decode("ISO-8859-1") + u'\n')
         answers.append(u''.join(x.decode("ISO-8859-1") for x in columns[1:]))
                                              
-    stdin = u''.join(words[:1000])
-    process = subprocess.Popen(FOMA_PATH + "foma", stdin=subprocess.PIPE,
+    process = subprocess.Popen([FOMA_PATH + "flookup", "italian.bin", "-x"], 
+                               stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdin = u'\n'.join(questions)
     stdout, stderr = process.communicate(stdin.encode('utf-8'))
 
-    fomas = stdout.decode('utf-8').split('apply up> ')[1:-1]
+    fomas = stdout.decode('utf-8').split('\n\n')
 
     with codecs.open('italian.txt.result', encoding='utf-8', mode='w+') as output:
         for word, results, answer in zip(questions, fomas, answers):
