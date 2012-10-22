@@ -9,7 +9,8 @@ import subprocess
 from config import FOMA_PATH
 
 N_rules = (
-    '+N+Sg:0', '+N+Pl:*i', '+N+Pl:*e'
+    '+N+Sg:0', '+N+Pl:*i', '+N+Pl:*e',
+    '+N+Pl:=iones', '+N+Pl:=es', '+N+Pl:=rs'
 )
 
 V_rules = (
@@ -135,8 +136,8 @@ define NounCiaEndingPl [i a] -> 0 || [c | g] _ "*" e ;
 define NounIoEndingPl [i o] -> 0 || C _ "*" i ;
 define NounUomini [o -> [i n] || u o m _ "*" i] .o.
                   [o -> [i n i] || u o m _ "-"] ;
-define NounSEndingPl [[..] -> [n e s]] || i o _ .#. ] .o.
-                     [[..] -> s || [e | r] _ .#.] ;
+define NounSEndingPl [[i o] -> 0 || _ "=" i o n e s ] .o.
+                     [[e | r] -> 0 || _ "=" [e | r] s ] ;
 
 # Rules for writing adjectives
 define AdjFSg [o] -> 0 || _ "&" a ;
@@ -157,7 +158,7 @@ define AdjPresenteParticipio [i -> e || _ r e "&" n t [e | i]] .o.
 define DoubleI [ i ] -> 0 || _ [ "^" | "~" ] i;
 
 #Cleanup: remove morpheme boundaries
-define Cleanup [ "^" | "$" | "\'" | "*" | "&" | "~" ] -> 0;
+define Cleanup [ "^" | "$" | "\'" | "*" | "&" | "~" | "="] -> 0;
 
 #This is required for guessing
 define Stem [ C^<4 V C^<4]+;
