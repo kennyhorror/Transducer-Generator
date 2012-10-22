@@ -137,7 +137,8 @@ define NounIoEndingPl [i o] -> 0 || C _ "*" i ;
 define NounUomini [o -> [i n] || u o m _ "*" i] .o.
                   [o -> [i n i] || u o m _ "-"] ;
 define NounSEndingPl [[i o] -> 0 || _ "=" i o n e s ] .o.
-                     [[e | r] -> 0 || _ "=" [e | r] s ] ;
+                     [r -> 0 || _ "=" r s ] .o.
+                     [e -> 0 || _ "=" e s ];
 
 # Rules for writing adjectives
 define AdjFSg [o] -> 0 || _ "&" a ;
@@ -145,7 +146,7 @@ define AdjMPl [o | e] -> 0 || _ "&" i ;
 define AdjFPl [o] -> 0 || _ "&" e ;
 define AdjCGoEndingPl [o] -> h || [C c | .#. C V c | g] _ "&" i ;
 define AdjCGaEndingPl [o] -> h || [c | g] _ "&" e ;
-define AdjToreEnding [t o r e] -> [t r i c] || _ "&" [e | i] ;
+define AdjToreEnding [t o r e] -> [t r i c | t o r] || _ "&" [e | i] ;
 define AdjProfessionPl a -> 0 || i s t _ "&" [e | i] ;
 define AdjCioEndingPl [i o] -> 0 || [c | g] _ "&" i ;
 define AdjCiaEndingPl [[i o] -> i || V [c | g] _ "&" e] .o.
@@ -158,7 +159,7 @@ define AdjPresenteParticipio [i -> e || _ r e "&" n t [e | i]] .o.
 define DoubleI [ i ] -> 0 || _ [ "^" | "~" ] i;
 
 #Cleanup: remove morpheme boundaries
-define Cleanup [ "^" | "$" | "\'" | "*" | "&" | "~" | "="] -> 0;
+define Cleanup [ "^" | "$" | "\'" | "*" | "&" | "~" | "=" ] -> 0;
 
 #This is required for guessing
 define Stem [ C^<4 V C^<4]+;
