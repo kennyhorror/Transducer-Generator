@@ -9,7 +9,7 @@ import subprocess
 from config import FOMA_PATH
 
 N_rules = (
-    '+N+Sg:0', '+N+Pl:*i', '+N+Pl:*e',
+    '+N+Sg:0', '+N+Pl:*i', '+N+Pl:*e'
 )
 
 V_rules = (
@@ -126,30 +126,34 @@ define VerbFake [ e "\\" ] -> 0 || _;
 # Rules for writing nouns
 define NounMPl [o | e] -> 0 || _ "*" i ;
 define NounFPl [a] -> 0 || _ "*" e ;
-define NounCGoEndingPl [o] -> h || C [c | g] _ "*" i ;
+define NounCGoEndingPl [[o] -> 0 || [o l o g] _ "*" i] .o.
+                       [[o] -> h || [C c | .#. C V c | g] _ "*" i] ;
 define NounCGaEndingPl [a] -> h || [c | g] _ "*" e ;
 define NounProfessionPl a -> 0 || i s t _ "*" [e | i] ;
 define NounGreekPl a -> 0 || [m | t] _ "*" i ;
-define NounIoEndingPl [i o] -> 0 || _ "*" i ;
 define NounCiaEndingPl [i a] -> 0 || [c | g] _ "*" e ;
+define NounIoEndingPl [i o] -> 0 || C _ "*" i ;
 define NounUomini [o -> [i n] || u o m _ "*" i] .o.
                   [o -> [i n i] || u o m _ "-"] ;
+define NounSEndingPl [[..] -> [n e s]] || i o _ .#. ] .o.
+                     [[..] -> s || [e | r] _ .#.] ;
 
 # Rules for writing adjectives
 define AdjFSg [o] -> 0 || _ "&" a ;
 define AdjMPl [o | e] -> 0 || _ "&" i ;
 define AdjFPl [o] -> 0 || _ "&" e ;
-define AdjCGoEndingPl [o] -> h || C [c | g] _ "&" i ;
+define AdjCGoEndingPl [o] -> h || [C c | .#. C V c | g] _ "&" i ;
 define AdjCGaEndingPl [o] -> h || [c | g] _ "&" e ;
+define AdjToreEnding [t o r e] -> [t r i c] || _ "&" [e | i] ;
 define AdjProfessionPl a -> 0 || i s t _ "&" [e | i] ;
 define AdjCioEndingPl [i o] -> 0 || [c | g] _ "&" i ;
-define AdjCiaEndingPl [[i a] -> i || V [c | g] _ "&" e] |
-                [[i a] -> 0 || C [c | g] _ "&" e];
+define AdjCiaEndingPl [[i o] -> i || V [c | g] _ "&" e] .o.
+                [[i o] -> 0 || C [c | g] _ "&" e];
 define AdjPresenteParticipio [i -> e || _ r e "&" n t [e | i]] .o.
                             [[r e] -> 0 || _ "&" n t [e | i]] ;
 
 
-#ii is not common in this language. So only i$i will remain.
+#ii is not common in this language. 
 define DoubleI [ i ] -> 0 || _ [ "^" | "~" ] i;
 
 #Cleanup: remove morpheme boundaries
@@ -166,6 +170,8 @@ read lexc italian.lexc
 define Lexicon
 
 define Grammar %s                             .o.
+               NounUomini                     .o.
+               NounSEndingPl                  .o.
                VerbSolidKG                    .o.
                VerbSolidKGCond                .o.
                VerbRemoveICond                .o.
@@ -177,13 +183,15 @@ define Grammar %s                             .o.
                VerbFuturoSempliceSecondThird  .o.
                VerbPresenteSg3First           .o.
                VerbPresenteSg3SecondThird     .o.
-               NounUomini                     .o.
                NounProfessionPl               .o.
                NounGreekPl                    .o.
-               NounIoEndingPl                 .o.
-               NounCiaEndingPl                .o.
+               NounCGoEndingPl                .o.
+               NounCGaEndingPl                .o.
                AdjProfessionPl                .o.
                AdjPresenteParticipio          .o.
+               AdjToreEnding                  .o.
+               AdjCGoEndingPl                 .o.
+               AdjCGaEndingPl                 .o.
                AdjCioEndingPl                 .o.
                AdjCiaEndingPl                 .o.
                VerbPassatoRemoto1             .o.
@@ -200,10 +208,8 @@ define Grammar %s                             .o.
                VerbGerundioFirstSecond        .o.
                VerbGerundioThird              .o.
                VerbPresenteSg12Pl1            .o.
-               NounCGoEndingPl                .o.
-               NounCGaEndingPl                .o.
-               AdjCGoEndingPl                 .o.
-               AdjCGaEndingPl                 .o.
+               NounCiaEndingPl                .o.
+               NounIoEndingPl                 .o.
                VerbCongiuntivoPresentePl12     .o.
                VerbCongiuntivoPresentePl3First .o.
                VerbCongiuntivoPresentePl3Rest  .o.

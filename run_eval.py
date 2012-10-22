@@ -33,7 +33,7 @@ if __name__ == '__main__':
                                  lemma.endswith(u'i') or lemma.endswith(u'e')):
           continue
         elif part == u'A' and not (lemma.endswith(u'to') or lemma.endswith(u're') or
-                                   lemma.endswith('o')):
+                                   lemma.endswith(u'o') or lemma.endswith(u'ista')):
           continue
         elif part == u'V' and not lemma.endswith(u're'):  # Need to be extended.
           continue
