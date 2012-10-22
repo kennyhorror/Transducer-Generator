@@ -20,6 +20,7 @@ V_rules = (
 
     '+V+Presente+Sg+1:^o',    '+V+Presente+Sg+2:^i',   '+V+Presente+Sg+3:^e',
     '+V+Presente+Pl+1:^iamo', '+V+Presente+Pl+2:^te', '+V+Presente+Pl+3:^ono',
+    '+V+Presente+Pl+2+Fake:^ta',
     '+V+Presente+Pl+3+Fake:^on',
 
     u'+V+Futuro+Semplice+Sg+1:$ò', '+V+Futuro+Semplice+Sg+2:$ai',
@@ -85,14 +86,17 @@ def print_foma(any_rules, lexicon = "Lexicon"):
 define V [a | o | u | e | i | ò | ì | à ];
 define C [b | c | d | f | g | h | j | k | l | m | n | p | q | r | s | t | v | w | x | y | z | "-"];
 define Cond [ r e i | r e s t i | r e b b e | r e m m o | r e s t e | r e b b e r o | r e b b e r ];
+
+define Cond2 [ a n | a n n o | a i | à | ò ];
+
 # Rules for writing verbs
-define VerbSolidKG [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] [ i | e | a n n o | a i | à | ò ];
+define VerbSolidKG [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] [ i | e | a n n o | a n | a i | à | ò ];
 define VerbSolidKGCond [..] -> [ h ] || [ c | g ] _ [ a r e ] [ "^" | "$" ] Cond;
 define VerbRemoveICond [i] -> 0 || [c | g] _ [ a r e ] ["^" | "$" ] Cond;
 define VerbPresenteSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m o ];
 define VerbPresenteSg3First [ r e "^" e ] -> "^" || [ a ] _;
 define VerbPresenteSg3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ e ];
-define VerbPresentePl2 [ r e ] -> 0 || [a | e | i ] _ "^" [ t e ];
+define VerbPresentePl2 [ r e ] -> 0 || [a | e | i ] _ "^" [ t e | t a ];
 define VerbPresentePl3First [ r e "^" o ] -> "~" || [ a ] _ [ n o | n ];
 define VerbPresentePl3SecondThird [ e r e | i r e ] [ "^" ] -> "~" || _ [ o n o | o n ];
 
@@ -110,7 +114,7 @@ define VerbImperfetto [ r e "^" ] -> "~" || [ a | e | i ] _ [ v o | v i | v a ];
 define VerbCondizionaleFirst [ a r e "^" ] -> e "~" || _ Cond;
 define VerbCondizionaleRest [ r e "^" ] -> "~" || [ e | i ] _ Cond;
 
-define VerbCondizionalePassatoSecond [ e r e "^" ] -> u "~" ||  _ [ t o ];
+define VerbCondizionalePassatoSecond [ e r e "^" ] -> u "~" ||  _ [ t o | t i ];
 define VerbCondizionalePassatoRest [ r e "^" ] -> "~" || [ a | i ] _ [ t o | t i ];
 
 define VerbCongiuntivoImperfetto [ r e "^" ] -> "~" || [ a | e | i ] _ [ s s l | s s e | s s i m o | s t e | s s e r o | s s e r | s s i ];
@@ -238,7 +242,10 @@ def parse_words(iterable):
   A = set()
   for line in iterable:
     columns = line.split()
-    wordform, lemmas = columns[0], columns[1:]
+    if len(columns) > 1:
+      wordform, lemmas = columns[0], columns[1:]
+    else:
+      lemmas = [columns[0]]
     for lemma_with_tag in lemmas:
       lemma, tag = lemma_with_tag.split('+')
       if tag == 'A':
@@ -293,6 +300,10 @@ def get_any(rules):
 
 if __name__ == '__main__':
   (N, V, A) = parse_words(open('italian.txt.learn', 'r'))
+  #(N1, V1, A1) = parse_words(open('lemmas.txt', 'r'))
+  #N = N.union(N1)
+  #V = V.union(V1)
+  #A = A.union(A1)
   print_header()
   print_words('Noun', N, 'Ninf')
   print_words('Verb', V, 'Vinf')

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import codecs
 import subprocess
@@ -30,10 +31,11 @@ if __name__ == '__main__':
 
         # Avoid bad lemmas.
         if part == u'N' and not (lemma.endswith(u'a') or lemma.endswith(u'o') or
-                                 lemma.endswith(u'i') or lemma.endswith(u'e')):
+                                 lemma.endswith(u'i') or lemma.endswith(u'e') or
+                                 lemma.endswith(u'à')):
           continue
-        elif part == u'A' and not (lemma.endswith(u'to') or lemma.endswith(u're') or
-                                   lemma.endswith('o')):
+        elif part == 'A' and not (lemma.endswith('to') or lemma.endswith('e') or
+                                   lemma.endswith('o') or lemma.endswith('a')):
           continue
         elif part == u'V' and not lemma.endswith(u're'):  # Need to be extended.
           continue
@@ -54,7 +56,7 @@ if __name__ == '__main__':
 
     output = codecs.open('lemmas.txt', encoding='utf-8', mode='w+')
     output2 = codecs.open('answer.txt', encoding='ISO-8859-1', mode='w+')
-    #words = set()
+    words = set()
     for question, results in zip(questions, fomas):
       best = -1
       best_lemma = question + u'+N'
@@ -66,7 +68,7 @@ if __name__ == '__main__':
           best = counts[key]
           best_lemma = key
       output2.write("%s\t%s\n" % (question, best_lemma))
-      #words.add(best_lemma)
+      words.add(best_lemma)
 
-    #lemmas = sorted(list(words))
-    #output.write(u'\n'.join(lemmas))
+    lemmas = sorted(list(words))
+    output.write(u'\n'.join(lemmas))
