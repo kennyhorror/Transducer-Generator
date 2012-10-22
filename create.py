@@ -14,13 +14,17 @@ N_rules = (
 
 V_rules = (
     '+V:0',
+    '+V+Fake:\\',
+
+
     '+V+Presente+Sg+1:^o',    '+V+Presente+Sg+2:^i',   '+V+Presente+Sg+3:^e',
     '+V+Presente+Pl+1:^iamo', '+V+Presente+Pl+2:^te', '+V+Presente+Pl+3:^ono',
+    '+V+Presente+Pl+3+Fake:^on',
 
-    u'+V+Futuro+Semplice+Sg+1:^ò', '+V+Futuro+Semplice+Sg+2:^ai',
-    u'+V+Futuro+Semplice+Sg+3:^à', '+V+Futuro+Semplice+Pl+1:^emo',
-    '+V+Futuro+Semplice+Pl+2:^ete','+V+Futuro+Semplice+Pl+3:^anno',
-    '+V+Futuro+Semplice+Pl+2+Fake:^eta',
+    u'+V+Futuro+Semplice+Sg+1:$ò', '+V+Futuro+Semplice+Sg+2:$ai',
+    u'+V+Futuro+Semplice+Sg+3:$à', '+V+Futuro+Semplice+Pl+1:$emo',
+    '+V+Futuro+Semplice+Pl+2:$ete','+V+Futuro+Semplice+Pl+3:$anno',
+    '+V+Futuro+Semplice+Pl+3+Fake:$an',
 
     '+V+Passato+Remoto+Sg+1:$i', '+V+Passato+Remoto+Sg+2:^sti',
     '+V+Passato+Remoto+Sg+3:^\'', '+V+Passato+Remoto+Pl+1:^mmo',
@@ -47,7 +51,7 @@ V_rules = (
 
     '+V+Congiuntivo+Presente+Sg:^a', '+V+Congiuntivo+Presente+Pl+1:^iamo',
     '+V+Congiuntivo+Presente+Pl+2:^iate', '+V+Congiuntivo+Presente+Pl+3:^ano',
-    '+V+Congiuntivo+Presente+Pl+3+Fake:^an',
+    '+V+Congiuntivo+Presente+Pl+2+Fake:^iata', '+V+Congiuntivo+Presente+Pl+3+Fake:^an',
     
     '+V+Condizionale+Passato+Sg:^to', '+V+Condizionale+Passato+Pl:^ti',
     '+V+Gerundio:^ndo',
@@ -88,11 +92,11 @@ define VerbPresenteSg12Pl1 [a r e | e r e | i r e] -> 0 || _ "^" [ o | i | i a m
 define VerbPresenteSg3First [ r e "^" e ] -> "^" || [ a ] _;
 define VerbPresenteSg3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ e ];
 define VerbPresentePl2 [ r e ] -> 0 || [a | e | i ] _ "^" [ t e ];
-define VerbPresentePl3First [ r e "^" o ] -> "^" || [ a ] _ [ n o ];
-define VerbPresentePl3SecondThird [ e r e | i r e ] -> 0 || _ "^" [ o n o ];
+define VerbPresentePl3First [ r e "^" o ] -> "~" || [ a ] _ [ n o | n ];
+define VerbPresentePl3SecondThird [ e r e | i r e ] [ "^" ] -> "~" || _ [ o n o | o n ];
 
-define VerbFuturoSempliceFirst [ a r e ] -> [ e r ] ||  _ "^" [ ò | a i | à | e m o | e t e | a n n o ]; 
-define VerbFuturoSempliceSecondThird [ e ] -> 0 || [ i r | e r ]  _ "^" [ ò | a i | à | e m o | e t e | a n n o | e t a ];
+define VerbFuturoSempliceFirst [ a r e "$" ] -> [ e r "~" ] ||  _ [ ò | a i | à | e m o | e t e |  a n n o | a n ]; 
+define VerbFuturoSempliceSecondThird [ e "$" ] -> "~" || [ i r | e r ] _ [ ò | a i | à | e m o | e t e | a n n o | a n ];
 
 #Experimental
 define VerbPassatoRemoto1 [ r e ] -> 0 || [ a | e | i ] _ "$" [ i ];
@@ -113,9 +117,11 @@ define VerbGerundioFirstSecond [ r e "^" ] -> "~" || [ a | e ] _ [ n d o ];
 define VerbGerundioThird [ i r e "^" ] -> e "~" || _ [ n d o ];
 define VerbCongiuntivoPresenteSgFirst [ a r e ] "^" [ a ] -> [ i ] || _;
 define VerbCongiuntivoPresenteSgRest [ i | e ] [ r e "^" ] -> "~" || _ [ a ];
-define VerbCongiuntivoPresentePl12 [ a | i | e ] [ r e ] -> 0 || _ "^" [ i a m o | i a t e];
-define VerbCongiuntivoPresentePl3First [ a r e ] "^" [ a ] -> "~" [ i ] || _ [ n o ];
-define VerbCongiuntivoPresentePl3Rest [ i | e ][ r e "^" ] -> "~" || _ [ a n o | a n ];
+define VerbCongiuntivoPresentePl12 [ a | i | e ] [ r e ] -> 0 || _ "^" [ i a m o | i a t e | i a t a ];
+define VerbCongiuntivoPresentePl3First [ a r e ] "^" [ a ] -> "~" [ i ] || _ [ n o | n ];
+define VerbCongiuntivoPresentePl3Rest [ i | e ][ r e "^" ] -> "~" || _ [ a n o | n ];
+
+define VerbFake [ e "\\" ] -> 0 || _;
 
 # Rules for writing nouns
 define NounMPl [o | e] -> 0 || _ "*" i ;
@@ -144,7 +150,7 @@ define AdjPresenteParticipio [i -> e || _ r e "&" n t [e | i]] .o.
 
 
 #ii is not common in this language. So only i$i will remain.
-define DoubleI [ i ] -> 0 || _ "^" i;
+define DoubleI [ i ] -> 0 || _ [ "^" | "~" ] i;
 
 #Cleanup: remove morpheme boundaries
 define Cleanup [ "^" | "$" | "\'" | "*" | "&" | "~" ] -> 0;
@@ -210,6 +216,7 @@ define Grammar %s                             .o.
                AdjMPl                         .o.
                VerbPresenteSg3First           .o. #This rule is really stupid. Need to be fixed
                DoubleI                        .o.
+               VerbFake                       .o.
                Cleanup;
 
 regex Grammar;

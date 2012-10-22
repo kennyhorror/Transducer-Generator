@@ -29,20 +29,24 @@ if __name__ == '__main__':
         lemma, part = answer.split('+')[0:2]
 
         # Avoid bad lemmas.
-        if part == u'N' and not (lemma.endswith('a') or lemma.endswith('o') or
-                                 lemma.endswith('i') or lemma.endswith('e')):
+        if part == u'N' and not (lemma.endswith(u'a') or lemma.endswith(u'o') or
+                                 lemma.endswith(u'i') or lemma.endswith(u'e')):
           continue
-        elif part == u'A' and not (lemma.endswith('to') or lemma.endswith('re')):
+        elif part == u'A' and not (lemma.endswith(u'to') or lemma.endswith(u're') or
+                                   lemma.endswith('o')):
           continue
-        elif not lemma.endswith('re'):  # Need to be extended.
+        elif part == u'V' and not lemma.endswith(u're'):  # Need to be extended.
           continue
+        
 
         key = '+'.join((lemma, part))
         weight = 1
-        if answer.split('+')[1] == u'N':
-          weight = 4
-        elif answer.split('+')[1] == u'A':
-          weight = 3
+        if part == u'N':
+          weight = 7
+          if lemma.endswith(u'e') or lemma.endswith(u'i'):
+            weight = 8
+        elif part == u'A':
+          weight = 6
         if counts.has_key(key):
           counts[key] = counts[key] + weight
         else:
@@ -50,7 +54,7 @@ if __name__ == '__main__':
 
     output = codecs.open('lemmas.txt', encoding='utf-8', mode='w+')
     output2 = codecs.open('answer.txt', encoding='ISO-8859-1', mode='w+')
-    words = set()
+    #words = set()
     for question, results in zip(questions, fomas):
       best = -1
       best_lemma = question + u'+N'
@@ -62,7 +66,7 @@ if __name__ == '__main__':
           best = counts[key]
           best_lemma = key
       output2.write("%s\t%s\n" % (question, best_lemma))
-      words.add(best_lemma)
+      #words.add(best_lemma)
 
-    lemmas = sorted(list(words))
-    output.write(u'\n'.join(lemmas))
+    #lemmas = sorted(list(words))
+    #output.write(u'\n'.join(lemmas))
