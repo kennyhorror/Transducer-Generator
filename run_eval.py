@@ -32,10 +32,10 @@ if __name__ == '__main__':
         # Avoid bad lemmas.
         if part == u'N' and not (lemma.endswith(u'a') or lemma.endswith(u'o') or
                                  lemma.endswith(u'i') or lemma.endswith(u'e') or
-                                 lemma.endswith(u'à')):
+                                 lemma.endswith(u'à') or lemma.endswith(u'r')):
           continue
         elif part == 'A' and not (lemma.endswith('to') or lemma.endswith('e') or
-                                   lemma.endswith('o') or lemma.endswith('a')):
+                                   lemma.endswith('o') or lemma.endswith('a') or lemma.endswith(u'ista')):
           continue
         elif part == u'V' and not lemma.endswith(u're'):  # Need to be extended.
           continue
